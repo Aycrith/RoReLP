@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link'; // For CTA buttons if they link somewhere
@@ -34,19 +35,21 @@ const CallToAction = () => {
         >
           {/* Primary CTA Button */}
           <motion.div {...animationProps(0.3)}>
-            <Link href="/signup" passHref legacyBehavior>
-              <a className="block bg-accent-gold text-neutral-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-opacity-90 transition-colors shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
-                Start Your Free 14-Day Trial
-              </a>
+            <Link
+              href="/signup"
+              className="block bg-accent-gold text-neutral-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-opacity-90 transition-colors shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
+            >
+              Start Your Free 14-Day Trial
             </Link>
           </motion.div>
 
           {/* Secondary CTA Button */}
           <motion.div {...animationProps(0.4)}>
-            <Link href="/request-demo" passHref legacyBehavior>
-              <a className="block bg-transparent border-2 border-primary-blue text-primary-blue px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary-blue hover:text-neutral-white transition-colors shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
-                Schedule Demo Call
-              </a>
+            <Link
+              href="/request-demo"
+              className="block bg-transparent border-2 border-primary-blue text-primary-blue px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary-blue hover:text-neutral-white transition-colors shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
+            >
+              Schedule Demo Call
             </Link>
           </motion.div>
         </motion.div>

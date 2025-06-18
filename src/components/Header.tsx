@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -35,10 +36,11 @@ const Header = () => {
         </nav>
 
         {/* CTA Button */}
-        <Link href="#get-started" legacyBehavior>
-          <a className="bg-primary-blue hover:bg-royal-purple text-neutral-white font-medium py-2 px-4 rounded-lg transition-colors active:scale-95 transform">
-            Get Started
-          </a>
+        <Link
+          href="#get-started"
+          className="bg-primary-blue hover:bg-royal-purple text-neutral-white font-medium py-2 px-4 rounded-lg transition-colors active:scale-95 transform"
+        >
+          Get Started
         </Link>
 
         {/* Mobile Menu Button (Optional - for later enhancement) */}

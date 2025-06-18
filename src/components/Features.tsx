@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { motion } from 'framer-motion';
 // Image from 'next/image' might not be needed if all icons are placeholders now.
