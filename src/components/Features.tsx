@@ -74,6 +74,8 @@ const Features = () => {
               {/* Updated icon rendering to use placeholder text */}
               <motion.div
                 className="w-20 h-20 bg-primary-blue/10 rounded-full flex items-center justify-center mx-auto mb-6"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                transition={{ duration: 0.2 }}
                 // Optional: Animate this wrapper if needed
               >
                 <span className="text-4xl text-primary-blue">{feature.iconPlaceholder}</span>

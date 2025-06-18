@@ -8,6 +8,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /*
   The :root variables for --background and --foreground
   and the @media (prefers-color-scheme: dark) block
