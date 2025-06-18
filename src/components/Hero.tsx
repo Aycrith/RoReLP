@@ -2,7 +2,7 @@
 import React, { useState } from 'react'; // Import useState
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { supabase } from '../../lib/supabaseClient'; // Adjust path as needed
+import { supabase } from '../lib/supabaseClient'; // Adjust path as needed
 
 const Hero = () => {
   const [email, setEmail] = useState('');
