@@ -1,26 +1,52 @@
+@import "../styles/variables.css";
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* --color-background: var(--background); */ /* Commenting out, will use variables.css */
+  /* --color-foreground: var(--foreground); */ /* Commenting out, will use variables.css */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
+/*
+  The :root variables for --background and --foreground
+  and the @media (prefers-color-scheme: dark) block
+  are removed as we are now using variables.css
+  and will rely on Tailwind for dark mode if implemented.
+*/
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  color: var(--color-dark-gray); /* Default text color */
+  background-color: var(--color-neutral-white); /* Default background */
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700; /* Bold */
+  color: var(--color-dark-gray);
+}
+
+p, a, li, span { /* Add other text elements as needed */
+  font-weight: 400; /* Regular */
+  color: var(--color-dark-gray);
+}
+
+a {
+  color: var(--color-primary-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-weight: 500; /* Medium */
+  /* Button specific text color can be defined here or in component styles */
+}
+
+/* Removed .animated-hero-bg and @keyframes gradientShift */
