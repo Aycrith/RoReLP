@@ -134,7 +134,7 @@ const ServicesProcess = () => {
               <motion.div className="md:w-3/5" variants={textVariants}>
                 <h3 className="text-2xl font-semibold text-primary-blue mb-3">Transparent Hourly Rates</h3>
                 <p className="text-gray-700 mb-4 text-lg">
-                  We believe in clear, upfront pricing. Our services are billed by the hour, and we're proud to offer rates that often beat traditional in-shop repair costs.
+                  We believe in clear, upfront pricing. Our services are billed by the hour, and we&apos;re proud to offer rates that often beat traditional in-shop repair costs.
                 </p>
                 <p className="text-gray-700 text-lg">
                   Contact us for our current hourly rate and an estimate for your specific needs.
