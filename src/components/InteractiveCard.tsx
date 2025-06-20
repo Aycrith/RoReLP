@@ -1,12 +1,12 @@
 "use client"; // For Framer Motion hooks
 import React from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform, Variants } from 'framer-motion';
 
 interface InteractiveCardProps {
   children: React.ReactNode;
   className?: string;
-  variants?: any; // For entrance animations
-  whileHoverConfig?: any; // For existing whileHover props like scale, shadow
+  variants?: Variants; // For entrance animations
+  whileHoverConfig?: Record<string, any>; // For existing whileHover props like scale, shadow
   initialStyle?: React.CSSProperties; // For initial styles like transparent border
   rotationFactor?: number;
   perspective?: string | number;
