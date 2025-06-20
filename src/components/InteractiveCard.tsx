@@ -5,8 +5,8 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 interface InteractiveCardProps {
   children: React.ReactNode;
   className?: string;
-  variants?: Record<string, unknown>; // For entrance animations
-  whileHoverConfig?: Record<string, unknown>; // For existing whileHover props like scale, shadow
+  variants?: any; // For entrance animations
+  whileHoverConfig?: any; // For existing whileHover props like scale, shadow
   initialStyle?: React.CSSProperties; // For initial styles like transparent border
   rotationFactor?: number;
   perspective?: string | number;
