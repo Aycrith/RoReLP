@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion'; // Added useMotionValue, useTransform
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
 
@@ -9,21 +9,38 @@ const Hero = () => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // For Hero Image Tilt Effect
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-100, 100], [10, -10]); // Max rotation 10 degrees for X-axis
+  const rotateY = useTransform(x, [-100, 100], [-10, 10]); // Max rotation 10 degrees for Y-axis
+
+  function handleMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set(event.clientX - rect.left - rect.width / 2);
+    y.set(event.clientY - rect.top - rect.height / 2);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
   const heroContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 }, // Stagger text block and image
+      transition: { staggerChildren: 0.2 },
     },
   };
 
   const textContentContainerVariants = {
-    hidden: { opacity: 0, y:20 }, // It should have its own initial state
+    hidden: { opacity: 0, y:20 },
     visible: {
       opacity: 1, y:0,
       transition: {
         staggerChildren: 0.15,
-        delayChildren: 0.05, // Small delay after container appears
+        delayChildren: 0.05,
         duration: 0.5
       },
     },
@@ -34,18 +51,18 @@ const Hero = () => {
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: { delay: i * 0.05, duration: 0.4 } // Faster per-word animation
+      transition: { delay: i * 0.05, duration: 0.4 }
     })
   };
 
-  const paragraphVariants = { // For paragraph and form block
+  const paragraphVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
-  const imageVariants = { // Specific for the image
-    hidden: { opacity: 0, y: 50, scale: 0.95 }, // Start further down and slightly smaller
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } } // Slower, more pronounced entry
+  const imageEntranceVariants = { // Renamed from imageVariants to avoid conflict with tilt logic
+    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
   };
 
   const headlineText = "The #1 CRM for Small-Engine Repair Shops";
@@ -83,9 +100,9 @@ const Hero = () => {
   };
 
   return (
-    <section // Changed section to not be motion component
+    <section
       id="hero"
-      className="flex items-center justify-center min-h-screen py-20 md:py-28 animated-hero-bg overflow-hidden" // Added overflow-hidden
+      className="flex items-center justify-center min-h-screen py-20 md:py-28 animated-hero-bg overflow-hidden"
     >
       <motion.div
         className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12"
@@ -98,21 +115,19 @@ const Hero = () => {
         <motion.div
           className="md:w-1/2 text-center md:text-left"
           variants={textContentContainerVariants}
-          // This will now be staggered by heroContainerVariants
         >
           <motion.h1
             className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-neutral-white leading-tight"
-            // Variants applied to children spans
-            initial="hidden" // Need initial and whileInView here to trigger children if parent has delayChildren
+            initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }} // Ensures it triggers if textContentContainer has delayChildren
-            transition={{ staggerChildren: 0.08 }} // This will apply to words if wordVariants is not custom
+            viewport={{ once: true }}
+            transition={{ staggerChildren: 0.05 }} // Adjusted word stagger directly here
           >
             {headlineWords.map((word, i) => (
               <motion.span
                 key={i}
                 variants={wordVariants}
-                custom={i} // Pass index for custom delay in wordVariants
+                custom={i}
                 style={{ display: 'inline-block', marginRight: '0.25em' }}
               >
                 {word}
@@ -127,7 +142,7 @@ const Hero = () => {
             {paragraphText}
           </motion.p>
 
-          <motion.div variants={paragraphVariants}> {/* Form block uses same as paragraph or a new one */}
+          <motion.div variants={paragraphVariants}>
             <form
               className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
               onSubmit={handleSubmit}
@@ -170,7 +185,18 @@ const Hero = () => {
         </motion.div>
 
         {/* Image Side */}
-        <motion.div className="md:w-1/2 mt-10 md:mt-0" variants={imageVariants}> {/* Use distinct imageVariants */}
+        <motion.div
+          className="md:w-1/2 mt-10 md:mt-0 flex justify-center items-center" // Added flex justify/items center
+          variants={imageEntranceVariants} // Use the entrance variants
+          style={{ perspective: "1200px", rotateX, rotateY }} // Apply perspective and rotations here
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          transition={{ // Add a gentle transition for the rotation reset onMouseLeave
+            type: "spring",
+            stiffness: 300,
+            damping: 20,
+          }}
+        >
           <Image
             src="/HEROSTORYLANDINGPAGE.PNG"
             alt="CRM Dashboard Preview for Royalty Repair"
@@ -178,6 +204,7 @@ const Hero = () => {
             height={450}
             className="rounded-lg shadow-2xl mx-auto"
             priority
+            style={{ transformStyle: "preserve-3d" }} // Ensure image itself can be part of 3D transform
           />
         </motion.div>
       </motion.div>

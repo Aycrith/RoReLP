@@ -38,6 +38,21 @@ const Testimonials = () => {
 
   const baseCardDelay = 0.15;
 
+  const cardContentContainerVariants = {
+    hidden: {}, // Parent card handles initial opacity/scale
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2, // Delay after card itself appears
+      },
+    },
+  };
+
+  const cardTextItemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  };
+
   return (
     <motion.section
       ref={sectionRef}
