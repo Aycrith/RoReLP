@@ -82,7 +82,7 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden text-center"
+      className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden"
     >
       {/* 1. Ken Burns Background */}
       <motion.div
@@ -102,117 +102,166 @@ const Hero = () => {
         />
       </motion.div>
 
-      {/* 2. NEW: CRM Dashboard Image Layer */}
-      <motion.div
-        className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden"
-        initial={{ opacity: 0, scale: 1.1 }}
-        animate={{ opacity: 0.15, scale: 1 }} // Reduced final opacity for more subtlety
-        transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" as const }} // Increased delay slightly
-      >
-        <Image
-          src="/HEROSTORYLANDINGPAGE.PNG" // User needs to provide this image
-          alt="CRM Dashboard Preview"
-          layout="intrinsic" // Changed to intrinsic to allow natural sizing up to a point
-          width={1000} // Example width, adjust based on image and desired max size
-          height={750} // Example height
-          objectFit="contain"
-          className="opacity-100 max-w-[80vw] max-h-[70vh]" // Tailwind classes for responsiveness
-        />
-      </motion.div>
-
-      {/* 3. Dark Radial Gradient Overlay */}
+      {/* 2. Dark Gradient Overlay */}
       <div
-        className="absolute inset-0 z-20"
-        style={{ background: 'radial-gradient(ellipse at center, rgba(17,24,39,0.45) 0%, rgba(17,24,39,0.85) 70%, rgba(17,24,39,1) 100%)' }} // Softer center, darker edges
+        className="absolute inset-0 z-10"
+        style={{ background: 'linear-gradient(to right, rgba(17,24,39,0.9) 0%, rgba(17,24,39,0.7) 50%, rgba(17,24,39,0.85) 100%)' }}
       ></div>
 
-      {/* 4. Centered Content */}
-      <motion.div
-        className="container mx-auto px-6 flex flex-col items-center justify-center relative z-30"
-        variants={centeredContentContainerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        <motion.h1
-          className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-neutral-white leading-tight max-w-3xl drop-shadow-lg" // Added drop-shadow-lg
-          variants={itemVariants}
-        >
-          {headlineWords.map((word, i) => (
-            <motion.span
-              key={i}
-              variants={wordVariants}
-              custom={i}
-              style={{ display: 'inline-block', marginRight: '0.25em' }}
-            >
-              {word}
-            </motion.span>
-          ))}
-        </motion.h1>
-
-        <motion.p
-          className="text-lg sm:text-xl mb-8 text-gray-200 max-w-xl drop-shadow-md" // Added drop-shadow-md
-          variants={itemVariants}
-        >
-          {paragraphText}
-        </motion.p>
-
-        <motion.div variants={itemVariants} className="w-full max-w-md">
-          <form
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            onSubmit={handleSubmit}
+      {/* 3. Main Content Container */}
+      <div className="container mx-auto px-6 relative z-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[70vh]">
+          
+          {/* Left Side - Content */}
+          <motion.div
+            className="flex flex-col items-start text-left lg:pr-8"
+            variants={centeredContentContainerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
           >
-            <input
-              type="email"
-              placeholder="Enter your business email"
-              className="px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-accent-gold flex-grow text-gray-700 sm:min-w-[280px]"
-              aria-label="Business email for quote request"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={formStatus === 'submitting'}
-            />
-            <button
-              type="submit"
-              className="bg-accent-gold text-neutral-white px-6 py-3 rounded-lg font-semibold
-                         min-h-[48px] min-w-[180px] sm:min-w-auto flex items-center justify-center
-                         hover:bg-yellow-500 hover:shadow-lg hover:ring-2 hover:ring-yellow-300 hover:ring-opacity-50
-                         transition-all duration-200 whitespace-nowrap active:scale-95 transform disabled:opacity-50 shadow-md"
-              disabled={formStatus === 'submitting'}
+            <motion.h1
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black mb-6 text-white leading-tight relative"
+              variants={itemVariants}
             >
-              <AnimatePresence mode="wait" initial={false}>
-                {formStatus === 'idle' && <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Get an On-Site Quote</motion.span>}
-                {formStatus === 'submitting' && <motion.span key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Getting Quote...</motion.span>}
-                {formStatus === 'success' && (
-                  <motion.div key="success" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center">
-                    <CheckIcon className="mr-2 text-neutral-white" /> Success!
-                  </motion.div>
-                )}
-                {formStatus === 'error' && (
-                  <motion.div key="error" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center">
-                    <XMarkIcon className="mr-2 text-neutral-white" /> Failed
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
-          </form>
-          {message && (
+              {/* Enhanced background for better readability */}
+              <div className="absolute inset-0 bg-gradient-to-r from-dark-gray/80 via-dark-gray/60 to-transparent rounded-2xl blur-xl scale-110 -z-10"></div>
+              
+              {/* Main headline with enhanced styling */}
+              <div className="relative z-10 bg-gradient-to-r from-dark-gray/90 via-dark-gray/70 to-dark-gray/50 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
+                {headlineWords.map((word, i) => (
+                  <motion.span
+                    key={i}
+                    variants={wordVariants}
+                    custom={i}
+                    className={`inline-block mr-2 ${
+                      word === '#1' 
+                        ? 'text-accent-gold font-black subtle-glow' 
+                        : 'text-white font-black subtle-glow'
+                    }`}
+                    style={{ 
+                      textShadow: '0 0 10px rgba(173, 216, 230, 0.4), 0 0 20px rgba(255, 255, 255, 0.2), 0 2px 4px rgba(0, 0, 0, 0.6)'
+                    }}
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </div>
+            </motion.h1>
+
             <motion.p
-              className={`mt-4 text-sm ${message.includes('Error:') || message.startsWith('Please enter') ? 'text-red-300' : 'text-green-300'}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              className="text-xl sm:text-2xl mb-8 text-white max-w-xl relative"
+              variants={itemVariants}
             >
-              {message}
+              {/* Background for better readability */}
+              <div className="absolute inset-0 bg-dark-gray/70 backdrop-blur-sm rounded-xl -z-10 scale-105"></div>
+              
+              {/* Enhanced paragraph text */}
+              <span className="relative z-10 block bg-dark-gray/60 backdrop-blur-md rounded-xl p-4 font-medium leading-relaxed subtle-glow" 
+                    style={{ textShadow: '0 0 8px rgba(173, 216, 230, 0.3), 0 0 15px rgba(255, 255, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.6)' }}>
+                {paragraphText}
+              </span>
             </motion.p>
-          )}
-          {!message && (
-            <p className="text-sm text-gray-300 mt-4">
-              Submit your email to start the quote process.
-            </p>
-          )}
-        </motion.div>
-      </motion.div>
+
+            <motion.div variants={itemVariants} className="w-full max-w-md">
+              <form
+                className="flex flex-col sm:flex-row gap-4"
+                onSubmit={handleSubmit}
+              >
+                <input
+                  type="email"
+                  placeholder="Enter your business email"
+                  className="px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-accent-gold flex-grow text-gray-700 sm:min-w-[280px]"
+                  aria-label="Business email for quote request"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={formStatus === 'submitting'}
+                />
+                <button
+                  type="submit"
+                  className="bg-accent-gold text-neutral-white px-6 py-3 rounded-lg font-semibold
+                             min-h-[48px] min-w-[180px] sm:min-w-auto flex items-center justify-center
+                             hover:bg-yellow-500 hover:shadow-lg hover:ring-2 hover:ring-yellow-300 hover:ring-opacity-50
+                             transition-all duration-200 whitespace-nowrap active:scale-95 transform disabled:opacity-50 shadow-md"
+                  disabled={formStatus === 'submitting'}
+                >
+                  <AnimatePresence mode="wait" initial={false}>
+                    {formStatus === 'idle' && <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Get an On-Site Quote</motion.span>}
+                    {formStatus === 'submitting' && <motion.span key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Getting Quote...</motion.span>}
+                    {formStatus === 'success' && (
+                      <motion.div key="success" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center">
+                        <CheckIcon className="mr-2 text-neutral-white" /> Success!
+                      </motion.div>
+                    )}
+                    {formStatus === 'error' && (
+                      <motion.div key="error" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center">
+                        <XMarkIcon className="mr-2 text-neutral-white" /> Failed
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
+              </form>
+              {message && (
+                <motion.p
+                  className={`mt-4 text-sm ${message.includes('Error:') || message.startsWith('Please enter') ? 'text-red-300' : 'text-green-300'}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {message}
+                </motion.p>
+              )}
+              {!message && (
+                <p className="text-sm text-gray-300 mt-4">
+                  Submit your email to start the quote process.
+                </p>
+              )}
+            </motion.div>
+          </motion.div>
+
+          {/* Right Side - CRM Dashboard Image */}
+          <motion.div
+            className="flex items-center justify-center lg:justify-end relative"
+            initial={{ opacity: 0, x: 50, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
+          >
+            <div className="relative max-w-lg w-full">
+              {/* Subtle glow effect behind the image */}
+              <div className="absolute inset-0 bg-accent-gold/20 rounded-xl blur-2xl scale-110 opacity-30"></div>
+              
+              {/* Main CRM Dashboard Image */}
+              <motion.div
+                className="relative z-10 bg-white/10 backdrop-blur-sm rounded-xl p-4 shadow-2xl border border-white/20"
+                whileHover={{ scale: 1.02, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Image
+                  src="/HEROSTORYLANDINGPAGE.PNG"
+                  alt="CRM Dashboard Preview"
+                  width={600}
+                  height={450}
+                  objectFit="contain"
+                  className="rounded-lg shadow-lg"
+                  priority
+                />
+                
+                {/* Floating badge */}
+                <motion.div
+                  className="absolute -top-3 -right-3 bg-accent-gold text-dark-gray px-3 py-1 rounded-full text-sm font-semibold shadow-lg"
+                  initial={{ scale: 0, rotate: -15 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 1.5, duration: 0.5, type: "spring" }}
+                >
+                  Live Demo
+                </motion.div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+        </div>
+      </div>
     </section>
   );
 };
