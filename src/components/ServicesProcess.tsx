@@ -7,7 +7,7 @@ const processSteps = [
   { step: 1, title: "Contact Us:", detail: "Briefly describe your issue and location.", moreInfo: "You can reach us by phone at (555) 123-4567 or email us at service@royaltyrepair.app." },
   { step: 2, title: "Get an Estimate:", detail: "We&apos;ll provide an estimated time and cost.", moreInfo: "Our estimates are based on common repair times and our competitive hourly rate. Parts are billed separately if needed." },
   { step: 3, title: "Schedule Service:", detail: "We arrange a convenient time to come to you.", moreInfo: "We aim for same-day or next-day service when possible and will work with your schedule." },
-  { step: 4, title: "Expert On-Site Repair:", detail: "Our technician performs the repair efficiently.", moreInfo: "We carry a wide range of common parts. If a special part needs ordering, we'll discuss options and timing with you." },
+  { step: 4, title: "Expert On-Site Repair:", detail: "Our technician performs the repair efficiently.", moreInfo: "We carry a wide range of common parts. If a special part needs ordering, we&apos;ll discuss options and timing with you." },
   { step: 5, title: "Pay & Go:", detail: "Simple payment once the job is done to your satisfaction.", moreInfo: "We accept cash, checks, and major credit/debit cards on-site for your convenience." }
 ];
 
