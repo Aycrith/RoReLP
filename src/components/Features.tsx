@@ -1,36 +1,44 @@
 "use client";
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Image from 'next/image'; // Import next/image
+import SubtleCircle from './backgrounds/SubtleCircle';
 
 const featuresData = [
   {
-    iconPlaceholder: "🧾",
+    icon: "/assets/icons/feature (1).svg", // Assuming this exact filename, space included
     title: "Effortless Invoicing",
     description: "Create and send professional invoices in seconds. Track payments and send automated reminders."
   },
   {
-    iconPlaceholder: "📅",
+    icon: "/assets/icons/feature.svg",
     title: "Smart Scheduling",
     description: "Manage appointments with an easy-to-use calendar. Avoid double bookings and keep your workflow smooth."
   },
   {
-    iconPlaceholder: "👥",
+    icon: "/assets/icons/information (1).svg", // Assuming this exact filename, space included
     title: "Customer Central",
     description: "Keep a complete history of every customer and every repair job in one organized place."
   }
 ];
 
 const Features = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
   const sectionTitleVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.1 } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.05 } },
   };
 
   const gridContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.3 }
+      transition: { staggerChildren: 0.1, delayChildren: 0.15 }
     }
   };
 
@@ -39,23 +47,40 @@ const Features = () => {
     visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
   };
 
-  // Variants for icon hover animation
-  const iconContainerVariants = {
-    rest: { backgroundColor: "rgba(37, 99, 235, 0.1)", scale: 1 }, // --color-primary-blue at 10% opacity
-    hover: { backgroundColor: "var(--color-primary-blue)", scale: 1.1 }
-  };
-
-  const iconTextVariants = {
-    rest: { color: "var(--color-primary-blue)" },
-    hover: { color: "var(--color-neutral-white)" }
-  };
+  // Removed iconContainerVariants and iconTextVariants as hover is now simpler with Image
 
   return (
-    <section
+    <motion.section
+      ref={sectionRef}
       id="features"
-      className="py-16 md:py-20 bg-neutral-white"
+      className="py-16 md:py-20 bg-neutral-white relative overflow-hidden"
     >
-      <div className="container mx-auto px-4">
+      {/* Background Parallax Elements */}
+      <SubtleCircle
+        scrollYProgress={scrollYProgress}
+        className="text-primary-blue/10"
+        yRange={['-30%', '30%']}
+        xRange={['-10%', '10%']}
+        opacityRange={[0.4, 0.1]}
+        scaleRange={[0.8, 1.2]}
+        top="5%"
+        left="-80px"
+        width="250px"
+        height="250px"
+      />
+      <SubtleCircle
+        scrollYProgress={scrollYProgress}
+        className="text-accent-gold/10"
+        yRange={['20%', '-20%']}
+        opacityRange={[0.3, 0.05]}
+        scaleRange={[1, 0.7]}
+        top="55%"
+        right="-120px"
+        width="350px"
+        height="350px"
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
         <motion.h2
           className="text-3xl md:text-4xl font-bold text-center mb-16 text-dark-gray"
           variants={sectionTitleVariants}
@@ -87,18 +112,23 @@ const Features = () => {
               transition={{ duration: 0.3 }}
             >
               <motion.div
-                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 cursor-default"
-                variants={iconContainerVariants}
-                initial="rest"
-                whileHover="hover"
-                transition={{ duration: 0.3 }}
+                className="w-20 h-20 relative flex items-center justify-center rounded-full bg-primary-blue/10 p-3 mx-auto mb-6" // Added p-3 for padding
+                // Removed whileHover from here, as the Image component won't change color. Hover on card is enough.
+                // Scale effect on icon can be added to the inner motion.div if desired.
               >
-                <motion.span
-                  className="text-3xl font-bold"
-                  variants={iconTextVariants} // Inherits hover state from parent
+                <motion.div // Inner div for icon animation
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2, duration: 0.4 }} // Delay slightly after card appears
                 >
-                  {feature.iconPlaceholder}
-                </motion.span>
+                    <Image
+                        src={feature.icon}
+                        alt={`${feature.title} icon`}
+                        width={48}
+                        height={48}
+                        className="object-contain" // Ensures icon scales nicely
+                    />
+                </motion.div>
               </motion.div>
               <h3
                 className="text-xl font-semibold mb-2 text-dark-gray"
@@ -114,7 +144,7 @@ const Features = () => {
           ))}
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

@@ -18,15 +18,18 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Column 1: Logo & Company */}
           <div>
-            <Link href="/" className="flex items-center space-x-2 mb-4">
+            {/* Apply a class that might help with SVG visibility if it uses currentColor */}
+            {/* For example, if SVG uses fill="currentColor", this 'text-neutral-white' would make it white. */}
+            <Link href="/" className="flex items-center space-x-2 mb-4 text-neutral-white">
               <Image
-                src="/RoyaltyRepairLogo1.jpeg" // Updated src
+                src="/assets/icons/royalty-repairNOBACKGROUND.svg"
                 alt="Royalty Repair Logo"
-                width={36}
-                height={36}
-                className="rounded-full" // Added for JPEG
+                width={150} // Consistent with header
+                height={40}  // Consistent with header
+                // className="rounded-full" // Removed
               />
-              <span className="text-lg md:text-xl font-semibold text-neutral-white">
+              {/* Assuming the SVG contains the text "Royalty Repair", otherwise remove sr-only */}
+              <span className="text-lg md:text-xl font-semibold text-neutral-white sr-only">
                 Royalty Repair
               </span>
             </Link>

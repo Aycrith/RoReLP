@@ -19,13 +19,13 @@ const CallToAction = () => {
       <div className="container mx-auto px-6 text-center">
         <motion.h2
           className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark-gray"
-          {...animationProps(0.1)}
+          {...animationProps(0.05)} // Adjusted delay
         >
           Ready to Streamline Your Shop?
         </motion.h2>
         <motion.p
           className="text-lg md:text-xl mb-10 text-gray-700 max-w-2xl mx-auto"
-          {...animationProps(0.2)}
+          {...animationProps(0.1)} // Adjusted delay
         >
           Join 500+ repair shops already saving 10+ hours weekly. Discover how Royalty Repair can transform your business operations.
         </motion.p>
@@ -34,7 +34,7 @@ const CallToAction = () => {
           // This div itself doesn't need animation props if children are animated individually
         >
           {/* Primary CTA Button */}
-          <motion.div {...animationProps(0.3)}>
+          <motion.div {...animationProps(0.15)}> {/* Adjusted delay */}
             <Link
               href="/signup"
               className="block bg-accent-gold text-neutral-white px-8 py-4 rounded-lg font-semibold text-lg
@@ -46,7 +46,7 @@ const CallToAction = () => {
           </motion.div>
 
           {/* Secondary CTA Button */}
-          <motion.div {...animationProps(0.4)}>
+          <motion.div {...animationProps(0.2)}> {/* Adjusted delay */}
             <Link
               href="/request-demo"
               className="block bg-transparent border-2 border-primary-blue text-primary-blue px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary-blue hover:text-neutral-white transition-colors shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
