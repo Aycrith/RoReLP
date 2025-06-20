@@ -6,7 +6,7 @@ interface InteractiveCardProps {
   children: React.ReactNode;
   className?: string;
   variants?: Variants; // For entrance animations
-  whileHoverConfig?: Record<string, any>; // For existing whileHover props like scale, shadow
+  whileHoverConfig?: Record<string, unknown>; // For existing whileHover props like scale, shadow
   initialStyle?: React.CSSProperties; // For initial styles like transparent border
   rotationFactor?: number;
   perspective?: string | number;
