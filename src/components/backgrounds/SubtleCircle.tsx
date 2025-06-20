@@ -30,12 +30,12 @@ const SubtleCircle: React.FC<SubtleCircleProps> = ({
   top, left, right, bottom
 }) => {
   const y = useTransform(scrollYProgress, [0, 1], yRange);
-  const x = xRange ? useTransform(scrollYProgress, [0, 1], xRange) : "0%"; // Default to no x movement if not specified
+  const x = useTransform(scrollYProgress, [0, 1], xRange || ["0%", "0%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], opacityRange);
-  const scale = scaleRange ? useTransform(scrollYProgress, [0, 1], scaleRange) : 1;
+  const scale = useTransform(scrollYProgress, [0, 1], scaleRange || [1, 1]);
 
-  const motionStyle: any = { y, opacity, scale };
-  if (xRange) motionStyle.x = x; // Only add x if xRange is provided
+  const motionStyle: Partial<React.CSSProperties> & { [key: string]: MotionValue<string | number> | (string | number) } = { y, opacity, scale };
+  if (xRange) motionStyle.x = x;
 
   // Construct style for initial positioning
   const initialPositionStyle: React.CSSProperties = {};

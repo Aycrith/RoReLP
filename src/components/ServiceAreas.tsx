@@ -62,7 +62,7 @@ const ServiceAreas = () => {
           variants={subTitleEntrance(0.3)} // Delay slightly after main title
            // initial, whileInView, viewport inherited
         >
-          We bring expert small engine repair services directly to your doorstep. Don't see your area? Contact us to inquire!
+          We bring expert small engine repair services directly to your doorstep. Don&apos;t see your area? Contact us to inquire!
         </motion.p>
 
         {/* Current Service Areas */}
