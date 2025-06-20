@@ -126,11 +126,12 @@ const Hero = () => {
           layout="fill"
           objectFit="cover"
           priority
+          quality={100}
         />
       </motion.div>
 
       {/* Optional: Dark overlay for better text contrast on image */}
-      <div className="absolute inset-0 bg-black/50 z-[1]"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-[1]"></div>
 
       <motion.div
         className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12 relative z-[2]" // Content on top
@@ -145,7 +146,7 @@ const Hero = () => {
           variants={textContentContainerVariants}
         >
           <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-neutral-white leading-tight"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight animate-text-glow"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -164,7 +165,7 @@ const Hero = () => {
           </motion.h1>
 
           <motion.p
-            className="text-lg sm:text-xl mb-8 text-gray-200"
+            className="text-lg sm:text-xl mb-8 text-gray-50 font-medium [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]"
             variants={paragraphVariants}
           >
             {paragraphText}
@@ -220,7 +221,7 @@ const Hero = () => {
               </motion.p>
             )}
             {!message && (
-              <p className="text-sm text-gray-300 mt-4">
+              <p className="text-sm text-gray-200 mt-4">
                 Submit your email to start the quote process.
               </p>
             )}

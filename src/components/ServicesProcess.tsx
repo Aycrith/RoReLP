@@ -102,7 +102,7 @@ const ServicesProcess = () => {
             <motion.div variants={imageContentBlockVariants} className="flex flex-col md:flex-row items-center gap-6 md:gap-8 text-center md:text-left">
               <motion.div className="md:w-2/5 flex-shrink-0" variants={imageVariants}>
                 <Image
-                  src="/HeroMobileRepair1.png"
+                  src="/HeroMobileRepairUnit1.png"
                   alt="Organized mobile repair van interior"
                   width={300}
                   height={225}
