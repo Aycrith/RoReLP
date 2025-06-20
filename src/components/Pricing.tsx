@@ -32,32 +32,37 @@ const Pricing = () => {
   return (
     <motion.section
       id="pricing"
-      className="py-16 md:py-20 bg-neutral-white" // Alternate background with AboutUs
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
+      className="py-16 md:py-20 bg-neutral-white overflow-hidden" // Added overflow-hidden
+      initial={{ opacity: 0, x: 50 }} // Slide in from right
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.7, delay: 0.1, ease: "easeInOut" }} // Adjusted duration and ease
       viewport={{ once: true }}
     >
       <div className="container mx-auto px-4 text-center">
         <motion.h2
           className="text-3xl md:text-4xl font-bold mb-12 text-dark-gray"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.3 }} // Delayed after section appears
           viewport={{ once: true }}
         >
           Simple, Transparent Pricing
         </motion.h2>
-        <div className="grid md:grid-cols-3 gap-8 items-stretch"> {/* Added items-stretch for equal height cards */}
+        {/* The individual pricing cards already have staggered delays in their `plan.delay` prop.
+            We can keep this, or make them children of a motion.div container that staggers them.
+            The current method is fine, as their `delay` is tied to the section's appearance.
+            The `initial` and `whileInView` on each card will respect these delays.
+        */}
+        <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {pricingPlans.map((plan) => (
             <motion.div
               key={plan.name}
               className={`p-8 rounded-lg shadow-lg flex flex-col ${plan.highlight ? 'bg-primary-blue/10 ring-2 ring-primary-blue' : 'bg-gray-50'}`}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }} // Slightly more y offset
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: plan.delay }}
+              transition={{ duration: 0.6, delay: plan.delay + 0.2 }} // Add base delay from section
               viewport={{ once: true }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, boxShadow: "0px 15px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)" }} // Enhanced hover
             >
               <h3 className={`text-2xl font-semibold mb-4 ${plan.highlight ? 'text-primary-blue' : 'text-dark-gray'}`}>{plan.name}</h3>
               <p className="text-4xl font-bold mb-1 text-dark-gray">
@@ -75,7 +80,7 @@ const Pricing = () => {
               </ul>
               <Link
                 href="/signup"
-                className={`font-semibold py-3 px-6 rounded-lg transition-colors w-full mt-auto ${plan.highlight ? 'bg-accent-gold text-neutral-white hover:bg-opacity-90' : 'bg-primary-blue text-neutral-white hover:bg-royal-purple'}`}
+                className={`font-semibold py-3 px-6 rounded-lg w-full mt-auto transform transition-all duration-200 active:scale-95 ${plan.highlight ? 'bg-accent-gold text-neutral-white hover:bg-yellow-500 hover:shadow-md' : 'bg-primary-blue text-neutral-white hover:bg-royal-purple hover:shadow-md'}`} // Added transform, transition, active:scale-95 and hover:shadow
               >
                 {plan.ctaText}
               </Link>

@@ -24,18 +24,18 @@ const Testimonials = () => {
   return (
     <motion.section
       id="testimonials"
-      className="py-16 md:py-20 bg-primary-blue/5" // Light brand color background
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
+      className="py-16 md:py-20 bg-primary-blue/5"
+      initial={{ opacity: 0, scale: 0.9 }} // Scale-in effect
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.7, delay: 0.1, ease: "easeInOut" }} // Adjusted duration and ease
       viewport={{ once: true }}
     >
       <div className="container mx-auto px-4 text-center">
         <motion.h2
           className="text-3xl md:text-4xl font-bold mb-12 text-dark-gray"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.3 }} // Delayed after section appears
           viewport={{ once: true }}
         >
           Trusted by Repair Shops Like Yours
@@ -44,12 +44,12 @@ const Testimonials = () => {
           {testimonialsData.map((testimonial) => (
              <motion.div
               key={testimonial.name}
-              className="bg-neutral-white p-8 rounded-lg shadow-lg flex flex-col items-center" // Added items-center
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: testimonial.delay }}
+              className="bg-neutral-white p-8 rounded-lg shadow-lg flex flex-col items-center"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }} // Card initial animation
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: testimonial.delay + 0.2 }} // Add base delay from section
               viewport={{ once: true }}
-              whileHover={{ y: -5 }} // Subtle lift on hover
+              whileHover={{ y: -5, boxShadow: "0px 15px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)" }} // Enhanced hover
             >
               {/* Optional: Avatar
               <Image

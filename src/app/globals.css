@@ -48,3 +48,15 @@ button {
   font-weight: 500; /* Medium */
   /* Button specific text color can be defined here or in component styles */
 }
+
+.animated-hero-bg {
+  background: linear-gradient(45deg, var(--color-primary-blue), var(--color-royal-purple), var(--color-accent-gold));
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

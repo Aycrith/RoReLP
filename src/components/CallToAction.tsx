@@ -37,7 +37,9 @@ const CallToAction = () => {
           <motion.div {...animationProps(0.3)}>
             <Link
               href="/signup"
-              className="block bg-accent-gold text-neutral-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-opacity-90 transition-colors shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
+              className="block bg-accent-gold text-neutral-white px-8 py-4 rounded-lg font-semibold text-lg
+                         hover:bg-yellow-500 hover:shadow-xl hover:ring-2 hover:ring-yellow-300 hover:ring-opacity-50
+                         transform transition-all duration-200 active:scale-95 shadow-md"
             >
               Start Your Free 14-Day Trial
             </Link>

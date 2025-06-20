@@ -34,7 +34,15 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-neutral-white/80 shadow-md backdrop-blur-[10px]">
       <div className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         {/* Logo Area */}
-        <motion.div whileHover={{ scale: 1.05, rotate: 1 }} transition={{ duration: 0.3 }}>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          whileHover={{ scale: 1.05, rotate: 1 }}
+          // Note: The inner transition={{ duration: 0.3 }} for whileHover might be overridden
+          // by the main transition. For distinct hover transition, nest another motion.div
+          // or use variant groups, but this should be acceptable for a simple effect.
+        >
           <Link href="/" className="flex items-center space-x-2">
             <Image
               src="/RoyaltyRepairLogo1.jpeg"
