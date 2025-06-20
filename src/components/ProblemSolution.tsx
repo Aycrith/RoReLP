@@ -64,7 +64,7 @@ const ProblemSolution = () => {
                   {/* Using next/image for actual SVG icons if paths are valid */}
                   <Image
                     src={item.icon}
-                    alt={`${item.title || item.problem} illustration`}
+                    alt={`${item.problem} illustration`}
                     width={100} // Adjust as needed
                     height={100} // Adjust as needed
                     className="object-contain text-primary-blue" // text-primary-blue might not affect SVGs with hardcoded fills

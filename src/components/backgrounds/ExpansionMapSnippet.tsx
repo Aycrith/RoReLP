@@ -1,9 +1,9 @@
 "use client";
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 const ExpansionMapSnippet = () => {
-  const cityVariants = {
+  const cityVariants: Variants = {
     hidden: { opacity: 0, scale: 0.5 },
     visible: (i: number) => ({
       opacity: 1,
@@ -12,7 +12,7 @@ const ExpansionMapSnippet = () => {
     })
   };
 
-  const pulseVariants = {
+  const pulseVariants: Variants = {
     pulse: (i: number) => ({
       scale: [1, 1.2, 1], // Adjusted pulse scale
       opacity: [0.6, 0.9, 0.6], // Adjusted opacity

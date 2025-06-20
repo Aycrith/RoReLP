@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useRef } from 'react';
-import { motion, useMotionValue, useTransform, useScroll, AnimatePresence } from 'framer-motion'; // Added AnimatePresence
+import { motion, useMotionValue, useTransform, useScroll, AnimatePresence, Variants } from 'framer-motion'; // Added AnimatePresence
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
-import CheckIcon from '../icons/CheckIcon'; // Import CheckIcon
-import XMarkIcon from '../icons/XMarkIcon'; // Import XMarkIcon
+import CheckIcon from './icons/CheckIcon'; // Import CheckIcon
+import XMarkIcon from './icons/XMarkIcon'; // Import XMarkIcon
 
 const Hero = () => {
   const [email, setEmail] = useState('');
@@ -38,7 +38,7 @@ const Hero = () => {
   const gradientOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
 
 
-  const heroContainerVariants = {
+  const heroContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -46,7 +46,7 @@ const Hero = () => {
     },
   };
 
-  const textContentContainerVariants = {
+  const textContentContainerVariants: Variants = {
     hidden: { opacity: 0, y:20 },
     visible: {
       opacity: 1, y:0,
@@ -58,7 +58,7 @@ const Hero = () => {
     },
   };
 
-  const wordVariants = {
+  const wordVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,
@@ -67,12 +67,12 @@ const Hero = () => {
     })
   };
 
-  const paragraphVariants = {
+  const paragraphVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
-  const imageEntranceVariants = {
+  const imageEntranceVariants: Variants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
   };
@@ -107,7 +107,7 @@ const Hero = () => {
         setEmail('');
         setFormStatus('success');
       }
-    } catch (error) {
+    } catch {
       setMessage('An unexpected error occurred. Please try again.');
       setFormStatus('error');
     } finally {

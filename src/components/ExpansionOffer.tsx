@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; // Added AnimatePresence
 import { supabase } from '../lib/supabaseClient';
 import ExpansionMapSnippet from './backgrounds/ExpansionMapSnippet';
-import CheckIcon from '../icons/CheckIcon'; // Import CheckIcon
-import XMarkIcon from '../icons/XMarkIcon'; // Import XMarkIcon
+import CheckIcon from './icons/CheckIcon'; // Import CheckIcon
+import XMarkIcon from './icons/XMarkIcon'; // Import XMarkIcon
 
 const ExpansionOffer = () => {
   const [name, setName] = useState('');
@@ -35,7 +35,7 @@ const ExpansionOffer = () => {
     }
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('customers')
         .insert([
           {
@@ -94,13 +94,13 @@ const ExpansionOffer = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-dark-gray mb-5 leading-tight">
-              Great News! We're Expanding!
+              Great News! We&apos;re Expanding!
             </h2>
             <p className="text-xl text-primary-blue font-semibold mb-4">
               Now Serving Clearwater, Largo & St. Petersburg!
             </p>
             <p className="text-gray-700 mb-6 text-lg">
-              Be among the first to experience Royalty Repair's convenient on-site service in your area! Sign up now to lock in an exclusive <strong className="text-accent-gold">20% Off Your First Repair</strong> and get priority booking when we officially launch in your neighborhood.
+              Be among the first to experience Royalty Repair&apos;s convenient on-site service in your area! Sign up now to lock in an exclusive <strong className="text-accent-gold">20% Off Your First Repair</strong> and get priority booking when we officially launch in your neighborhood.
             </p>
             <ul className="space-y-2 text-gray-700 mb-6 text-lg">
               <li className="flex items-center"><span className="text-accent-gold mr-2 text-xl">✓</span> Exclusive Launch Discount (20% Off!)</li>
@@ -110,7 +110,7 @@ const ExpansionOffer = () => {
             <div className="mt-8">
               <ExpansionMapSnippet />
             </div>
-             <p className="text-sm text-gray-500 mt-8">Don't miss out – secure your spot and discount today!</p>
+             <p className="text-sm text-gray-500 mt-8">Don&apos;t miss out – secure your spot and discount today!</p>
           </motion.div>
 
           <motion.div
@@ -160,7 +160,7 @@ const ExpansionOffer = () => {
               </button>
             </form>
             {message && <p className={`mt-4 text-sm text-center ${message.startsWith('Error:') || message.startsWith('Please') ? 'text-red-600' : 'text-green-600'}`}>{message}</p>}
-            <p className="text-xs text-gray-500 mt-4 text-center">Offer valid for new customers in Clearwater, Largo, and St. Petersburg. We'll email you the details and confirm service availability!</p>
+            <p className="text-xs text-gray-500 mt-4 text-center">Offer valid for new customers in Clearwater, Largo, and St. Petersburg. We&apos;ll email you the details and confirm service availability!</p>
           </motion.div>
         </div>
       </div>
