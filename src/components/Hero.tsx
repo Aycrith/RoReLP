@@ -36,7 +36,7 @@ const Hero = () => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } }
   };
 
   const headlineText = "The #1 CRM for Small-Engine Repair Shops";
@@ -107,7 +107,7 @@ const Hero = () => {
         className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden"
         initial={{ opacity: 0, scale: 1.1 }}
         animate={{ opacity: 0.15, scale: 1 }} // Reduced final opacity for more subtlety
-        transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }} // Increased delay slightly
+        transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" as const }} // Increased delay slightly
       >
         <Image
           src="/HEROSTORYLANDINGPAGE.PNG" // User needs to provide this image
