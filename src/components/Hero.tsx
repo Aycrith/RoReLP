@@ -35,7 +35,6 @@ const Hero = () => {
   // Gradient stays fully opaque for first 70% of its scroll out, then fades quickly.
   const gradientOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
 
-
   const heroContainerVariants = {
     hidden: { opacity: 0 },
     visible: {

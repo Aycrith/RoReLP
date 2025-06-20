@@ -43,7 +43,7 @@ const Features = () => {
     }
   };
 
-  const featureItemVariants = {
+  const featureItemVariants = { // Entrance animation for the card
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
   };
@@ -59,7 +59,6 @@ const Features = () => {
     rest: { scale: 1, rotate: 0 },
     hover: { scale: 1.15, rotate: 10 }
   };
-
 
   return (
     <motion.section
