@@ -66,12 +66,12 @@ const Hero = () => {
 
   const paragraphVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
   const imageEntranceVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7 } }
   };
 
   const headlineText = "The #1 CRM for Small-Engine Repair Shops";
@@ -101,7 +101,7 @@ const Hero = () => {
         setMessage('Thank you! We will contact you shortly to discuss your on-site service needs.');
         setEmail('');
       }
-    } catch (error) {
+    } catch {
       setMessage('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);

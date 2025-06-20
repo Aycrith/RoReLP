@@ -21,7 +21,7 @@ const ServicesProcess = () => { // Renamed component
 
   const contentBlockVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
   return (
@@ -30,7 +30,7 @@ const ServicesProcess = () => { // Renamed component
       className="py-16 md:py-20 bg-neutral-white overflow-hidden"
       initial={{ opacity: 0, x: 50 }}
       whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay: 0.05, ease: "easeInOut" }}
+      transition={{ duration: 0.7, delay: 0.05 }}
       viewport={{ once: true }}
     >
       <div className="container mx-auto px-4"> {/* Removed text-center for more flexible inner content alignment */}
@@ -76,7 +76,7 @@ const ServicesProcess = () => { // Renamed component
             <ol className="list-none space-y-4 text-gray-700 text-lg">
               {[
                 { step: 1, title: "Contact Us:", description: "Briefly describe your issue and location." },
-                { step: 2, title: "Get an Estimate:", description: "We'll provide an estimated time and cost." },
+                { step: 2, title: "Get an Estimate:", description: "We&apos;ll provide an estimated time and cost." },
                 { step: 3, title: "Schedule Service:", description: "We arrange a convenient time to come to you." },
                 { step: 4, title: "Expert On-Site Repair:", description: "Our technician performs the repair efficiently." },
                 { step: 5, title: "Pay & Go:", description: "Simple payment once the job is done to your satisfaction." }

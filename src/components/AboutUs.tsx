@@ -1,7 +1,7 @@
 "use client";
-import { motion, useScroll, useTransform } from 'framer-motion'; // Added useScroll, useTransform
-import React, { useRef } from 'react'; // Added useRef
-import SubtleCircle from './backgrounds/SubtleCircle'; // Import SubtleCircle
+import { motion, useScroll } from 'framer-motion';
+import React, { useRef } from 'react';
+import SubtleCircle from './backgrounds/SubtleCircle';
 
 const AboutUs = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -17,7 +17,7 @@ const AboutUs = () => {
       className="py-16 md:py-20 bg-gray-50 overflow-hidden relative" // Ensure relative for positioning context
       initial={{ opacity: 0, x: -50 }}
       whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay: 0.05, ease: "easeInOut" }}
+      transition={{ duration: 0.7, delay: 0.05 }}
       viewport={{ once: true }}
     >
       {/* Background Parallax Elements */}
@@ -70,7 +70,7 @@ const AboutUs = () => {
           transition={{ duration: 0.6, delay: 0.25 }}
           viewport={{ once: true }}
         >
-          Our mission is to empower your business with an intuitive, powerful, and affordable CRM designed specifically for the unique needs of small engine repair specialists. We're committed to helping you streamline operations, save time, and ultimately, grow your kingdom.
+          Our mission is to empower your business with an intuitive, powerful, and affordable CRM designed specifically for the unique needs of small engine repair specialists. We&apos;re committed to helping you streamline operations, save time, and ultimately, grow your kingdom.
         </motion.p>
       </div>
     </motion.section>
