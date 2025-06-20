@@ -13,7 +13,7 @@ const Hero = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.3 }, // Stagger text block and image
+      transition: { staggerChildren: 0.2 }, // Stagger text block and image
     },
   };
 
@@ -22,8 +22,8 @@ const Hero = () => {
     visible: {
       opacity: 1, y:0,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1, // Small delay after container appears
+        staggerChildren: 0.15,
+        delayChildren: 0.05, // Small delay after container appears
         duration: 0.5
       },
     },
@@ -34,7 +34,7 @@ const Hero = () => {
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: { delay: i * 0.08, duration: 0.4 }
+      transition: { delay: i * 0.05, duration: 0.4 } // Faster per-word animation
     })
   };
 

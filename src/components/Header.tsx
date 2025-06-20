@@ -45,13 +45,13 @@ const Header = () => {
         >
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/RoyaltyRepairLogo1.jpeg"
+              src="/assets/icons/royalty-repairNOBACKGROUND.svg"
               alt="Royalty Repair Logo"
-            width={36}
-            height={36}
-            className="rounded-full"
-          />
-          <span className="text-lg md:text-xl font-semibold text-dark-gray">
+              width={150}
+              height={40}
+              // className="rounded-full" // Removed as it's an SVG
+            />
+            <span className="text-lg md:text-xl font-semibold text-dark-gray sr-only"> {/* Added sr-only as logo text is in SVG */}
             Royalty Repair
           </span>
           </Link>
