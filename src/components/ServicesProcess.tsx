@@ -31,7 +31,7 @@ const ServicesProcess = () => {
 
   const contentBlockVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } }
   };
 
   const imageContentBlockVariants = { // Specific for blocks that contain an image and text
@@ -39,13 +39,13 @@ const ServicesProcess = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: "easeOut", staggerChildren: 0.15, delayChildren: 0.1 }
+      transition: { duration: 0.5, ease: "easeOut" as const, staggerChildren: 0.15, delayChildren: 0.1 }
     }
   };
 
   const imageVariants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" as const } }
   };
 
   const textVariants = { // For h3 and p within imageContentBlockVariants
@@ -76,7 +76,7 @@ const ServicesProcess = () => {
       className="py-16 md:py-20 bg-neutral-white overflow-hidden"
       initial={{ opacity: 0, x: 50 }}
       whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay: 0.05, ease: "easeInOut" }}
+      transition={{ duration: 0.7, delay: 0.05, ease: "easeInOut" as const }}
       viewport={{ once: true }}
     >
       <div className="container mx-auto px-4">
