@@ -50,9 +50,9 @@ button {
 }
 
 .animated-hero-bg {
-  background: linear-gradient(45deg, var(--color-primary-blue), var(--color-royal-purple), var(--color-accent-gold));
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  background: linear-gradient(45deg, var(--color-primary-blue), var(--color-royal-purple));
+  background-size: 400% 400%; /* Ensure this is still present */
+  animation: gradientShift 30s ease infinite; /* Updated duration */
 }
 
 @keyframes gradientShift {
