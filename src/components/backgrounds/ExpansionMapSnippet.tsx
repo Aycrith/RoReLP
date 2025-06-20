@@ -50,7 +50,7 @@ const ExpansionMapSnippet = () => {
           transition={{ duration: 1.2, delay: 0.5, ease: "easeInOut" }}
         />
 
-        {cities.map((city, i) => (
+        {cities.map((city) => (
           <motion.g
             key={city.name}
             initial="hidden"
