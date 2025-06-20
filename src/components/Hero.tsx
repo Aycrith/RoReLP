@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useRef } from 'react';
-import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
-import CheckIcon from '../icons/CheckIcon';
-import XMarkIcon from '../icons/XMarkIcon';
+import CheckIcon from './icons/CheckIcon';
+import XMarkIcon from './icons/XMarkIcon';
 
 const Hero = () => {
   const [email, setEmail] = useState('');
@@ -69,7 +69,7 @@ const Hero = () => {
         setEmail('');
         setFormStatus('success');
       }
-    } catch (error) {
+    } catch {
       setMessage('An unexpected error occurred. Please try again.');
       setFormStatus('error');
     } finally {
