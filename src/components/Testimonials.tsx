@@ -1,6 +1,6 @@
 "use client";
-import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'; // Added useScroll, useTransform, useMotionTemplate
-import React, { useRef } from 'react'; // Added useRef
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 
 const testimonialsData = [
   {
@@ -81,14 +81,18 @@ const Testimonials = () => {
               className="bg-neutral-white p-8 rounded-lg shadow-lg flex flex-col items-center"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: baseCardDelay + index * 0.1 }}
+              // Moved main transition to be overridden by whileHover's transition if specified, or use a general one
+              transition={{ duration: 0.6, delay: baseCardDelay + index * 0.1, type: "spring", stiffness: 100 }}
               viewport={{ once: true }}
               whileHover={{
-                scale: 1.05, // Added consistent scale
+                scale: 1.05,
                 y: -5,
-                boxShadow: "0px 10px 20px -5px rgba(0, 0, 0, 0.1), 0px 8px 8px -5px rgba(0, 0, 0, 0.04)" // Adjusted shadow
+                boxShadow: "0px 10px 20px -5px rgba(0, 0, 0, 0.1), 0px 8px 8px -5px rgba(0, 0, 0, 0.04)"
               }}
-              // transition prop for whileHover is part of the main transition prop or can be specified in whileHover
+              // Add a specific transition for the hover effect if different from entrance
+              // For this case, the default spring or a simple duration on the main transition should be fine.
+              // If more control over hover transition is needed, it can be added to whileHover:
+              // whileHover={{ ..., transition: { duration: 0.2 } }}
             >
               <motion.div variants={cardContentContainerVariants} initial="hidden" animate="visible">
                 {/* Optional: Avatar

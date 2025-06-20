@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from 'react';
-import { motion, useScroll, Variants } from 'framer-motion';
+import { motion, useScroll } from 'framer-motion';
 import Image from 'next/image';
 import SubtleCircle from './backgrounds/SubtleCircle';
 import InteractiveCard from './InteractiveCard';
@@ -30,12 +30,12 @@ const Features = () => {
     offset: ["start end", "end start"]
   });
 
-  const sectionTitleVariants: Variants = {
+  const sectionTitleVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.05 } },
   };
 
-  const gridContainerVariants: Variants = {
+  const gridContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -43,19 +43,19 @@ const Features = () => {
     }
   };
 
-  const featureItemVariants: Variants = {
+  const featureItemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
   };
 
   // Variants for icon container hover animation (background)
-  const iconContainerBgVariants: Variants = {
+  const iconContainerBgVariants = {
     rest: { scale: 1, backgroundColor: "rgba(37, 99, 235, 0.1)" }, // primary-blue/10
     hover: { scale: 1.1, backgroundColor: "var(--color-primary-blue)" }
   };
 
   // Variants for icon image hover animation (reacts to parent container's hover)
-  const iconImageVariants: Variants = {
+  const iconImageVariants = {
     rest: { scale: 1, rotate: 0, y: 0 }, // Ensure y is defined for rest state
     hover: {
       scale: 1.25,
@@ -64,6 +64,7 @@ const Features = () => {
       transition: { duration: 0.5, ease: "easeInOut" }
     }
   };
+
 
   return (
     <motion.section

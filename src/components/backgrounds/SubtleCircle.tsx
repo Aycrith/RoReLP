@@ -34,6 +34,9 @@ const SubtleCircle: React.FC<SubtleCircleProps> = ({
   const opacity = useTransform(scrollYProgress, [0, 1], opacityRange);
   const scale = useTransform(scrollYProgress, [0, 1], scaleRange || [1, 1]);
 
+  const motionStyle: Partial<React.CSSProperties> & { [key: string]: MotionValue<string | number> | (string | number) } = { y, opacity, scale };
+  if (xRange) motionStyle.x = x;
+
   // Construct style for initial positioning
   const initialPositionStyle: React.CSSProperties = {};
   if (top !== undefined) initialPositionStyle.top = top;
@@ -44,7 +47,7 @@ const SubtleCircle: React.FC<SubtleCircleProps> = ({
   return (
     <motion.div
       className={`absolute -z-10 ${className}`}
-      style={{ ...initialPositionStyle, y, opacity, scale, x: xRange ? x : undefined }} 
+      style={{ ...initialPositionStyle, ...motionStyle }} // Apply transformed y, opacity, scale, and potentially x
     >
       <svg
         width={width}

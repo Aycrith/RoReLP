@@ -1,17 +1,15 @@
 "use client";
-import React, { useState, useRef } from 'react';
-import { motion, useMotionValue, useTransform, useScroll, AnimatePresence, Variants } from 'framer-motion'; // Added AnimatePresence
+import React, { useState } from 'react';
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
-import CheckIcon from './icons/CheckIcon'; // Import CheckIcon
-import XMarkIcon from './icons/XMarkIcon'; // Import XMarkIcon
+import CheckIcon from './icons/CheckIcon';
+import XMarkIcon from './icons/XMarkIcon';
 
 const Hero = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  // const [isLoading, setIsLoading] = useState(false); // Replaced with formStatus
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-
 
   // For Hero Image Tilt Effect
   const x = useMotionValue(0);
@@ -30,15 +28,7 @@ const Hero = () => {
     y.set(0);
   }
 
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-  const gradientOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
-
-
-  const heroContainerVariants: Variants = {
+  const heroContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -46,7 +36,7 @@ const Hero = () => {
     },
   };
 
-  const textContentContainerVariants: Variants = {
+  const textContentContainerVariants = {
     hidden: { opacity: 0, y:20 },
     visible: {
       opacity: 1, y:0,
@@ -58,7 +48,7 @@ const Hero = () => {
     },
   };
 
-  const wordVariants: Variants = {
+  const wordVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,
@@ -67,12 +57,12 @@ const Hero = () => {
     })
   };
 
-  const paragraphVariants: Variants = {
+  const paragraphVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
-  const imageEntranceVariants: Variants = {
+  const imageEntranceVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
   };
@@ -87,7 +77,7 @@ const Hero = () => {
     setMessage('');
     if (!email) {
       setMessage('Please enter your email.');
-      setFormStatus('error'); // Changed to error status
+      setFormStatus('error');
       setTimeout(() => { setFormStatus('idle'); setMessage(''); }, 3000);
       return;
     }
@@ -111,8 +101,7 @@ const Hero = () => {
       setMessage('An unexpected error occurred. Please try again.');
       setFormStatus('error');
     } finally {
-      // setIsLoading(false); // Not needed
-      if (formStatus !== 'submitting') { // Don't revert if still submitting (e.g. fast clicks)
+      if (formStatus !== 'submitting') {
         setTimeout(() => { setFormStatus('idle'); setMessage(''); }, 3000);
       }
     }
@@ -120,21 +109,37 @@ const Hero = () => {
 
   return (
     <section
-      ref={heroRef}
       id="hero"
-      className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden"
+      className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden" // Fallback bg
     >
+      <motion.div // Ken Burns Image Container
+        className="absolute inset-0 z-0" // z-0 to be behind overlay and content
+        style={{ scale: 1.05 }}
+        animate={{
+          scale: [1.05, 1.15, 1.05],
+          transition: { duration: 40, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }
+        }}
+      >
+        <Image
+          src="/Hero4HD.png" // Updated image path
+          alt="Mobile mechanic working on an engine outdoors"
+          layout="fill"
+          objectFit="cover"
+          priority
+        />
+      </motion.div>
+
+      {/* Optional: Dark overlay for better text contrast on image */}
+      <div className="absolute inset-0 bg-black/50 z-[1]"></div>
+
       <motion.div
-        className="absolute inset-0 animated-hero-bg z-[1]"
-        style={{ opacity: gradientOpacity }}
-      />
-      <motion.div
-        className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12 relative z-[2]"
+        className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12 relative z-[2]" // Content on top
         variants={heroContainerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
+        {/* Content Side */}
         <motion.div
           className="md:w-1/2 text-center md:text-left"
           variants={textContentContainerVariants}
@@ -178,7 +183,7 @@ const Hero = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                disabled={formStatus === 'submitting'} // Updated disabled state
+                disabled={formStatus === 'submitting'}
               />
               <button
                 type="submit"
@@ -186,7 +191,7 @@ const Hero = () => {
                            min-h-[48px] min-w-[200px] flex items-center justify-center
                            hover:bg-yellow-500 hover:shadow-lg hover:ring-2 hover:ring-yellow-300 hover:ring-opacity-50
                            transition-all duration-200 whitespace-nowrap active:scale-95 transform disabled:opacity-50 shadow-md"
-                disabled={formStatus === 'submitting'} // Updated disabled state
+                disabled={formStatus === 'submitting'}
               >
                 <AnimatePresence mode="wait" initial={false}>
                   {formStatus === 'idle' && <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Get an On-Site Quote</motion.span>}

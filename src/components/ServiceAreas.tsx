@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const currentServiceAreas = [
   { name: "Springfield Metro", description: "Our primary service hub, offering rapid response times for all your repair needs." },
@@ -15,7 +15,7 @@ const expansionAreas = [
 ];
 
 const ServiceAreas = () => {
-  const cardVariants: Variants = {
+  const cardVariants = {
     hidden: { opacity: 0, y: 30 }, // Increased y for more noticeable entry
     visible: (i: number) => ({
       opacity: 1,
@@ -24,17 +24,17 @@ const ServiceAreas = () => {
     })
   };
 
-  const sectionEntrance: Variants = {
+  const sectionEntrance = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.1 } }
   };
 
-  const titleEntrance: Variants = {
+  const titleEntrance = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.2 } }
   };
 
-  const subTitleEntrance = (delay: number = 0.2): Variants => ({ // Function to allow custom delay for subheadings
+  const subTitleEntrance = (delay: number = 0.2) => ({ // Function to allow custom delay for subheadings
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay } }
   });

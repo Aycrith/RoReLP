@@ -49,14 +49,4 @@ button {
   /* Button specific text color can be defined here or in component styles */
 }
 
-.animated-hero-bg {
-  background: linear-gradient(45deg, var(--color-primary-blue), var(--color-royal-purple));
-  background-size: 400% 400%; /* Ensure this is still present */
-  animation: gradientShift 30s ease infinite; /* Updated duration */
-}
-
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+/* Removed .animated-hero-bg and @keyframes gradientShift */

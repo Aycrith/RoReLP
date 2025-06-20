@@ -1,10 +1,11 @@
 "use client";
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
+import Image from 'next/image'; // Added Image import
 
 const processSteps = [
   { step: 1, title: "Contact Us:", detail: "Briefly describe your issue and location.", moreInfo: "You can reach us by phone at (555) 123-4567 or email us at service@royaltyrepair.app." },
-  { step: 2, title: "Get an Estimate:", detail: "We&apos;ll provide an estimated time and cost.", moreInfo: "Our estimates are based on common repair times and our competitive hourly rate. Parts are billed separately if needed." },
+  { step: 2, title: "Get an Estimate:", detail: "We'll provide an estimated time and cost.", moreInfo: "Our estimates are based on common repair times and our competitive hourly rate. Parts are billed separately if needed." },
   { step: 3, title: "Schedule Service:", detail: "We arrange a convenient time to come to you.", moreInfo: "We aim for same-day or next-day service when possible and will work with your schedule." },
   { step: 4, title: "Expert On-Site Repair:", detail: "Our technician performs the repair efficiently.", moreInfo: "We carry a wide range of common parts. If a special part needs ordering, we'll discuss options and timing with you." },
   { step: 5, title: "Pay & Go:", detail: "Simple payment once the job is done to your satisfaction.", moreInfo: "We accept cash, checks, and major credit/debit cards on-site for your convenience." }
@@ -17,7 +18,7 @@ const ServicesProcess = () => {
     setActiveStep(activeStep === index ? null : index);
   };
 
-  const sectionContainerVariants: Variants = {
+  const sectionContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -28,24 +29,42 @@ const ServicesProcess = () => {
     }
   };
 
-  const contentBlockVariants: Variants = { // For the 2-column info and the whole process block
+  const contentBlockVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
-  const processListContainerVariants: Variants = { // For the div wrapping mapped steps
+  const imageContentBlockVariants = { // Specific for blocks that contain an image and text
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut", staggerChildren: 0.15, delayChildren: 0.1 }
+    }
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
+  };
+
+  const textVariants = { // For h3 and p within imageContentBlockVariants
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.4 } }
+  };
+
+  const processListContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1, // Stagger each step item
-        delayChildren: 0.1 // Delay after "Our Simple Process" title (if title had its own motion.h3)
-                           // Since title is part of contentBlockVariants, this might not be needed or can be small
+        staggerChildren: 0.1,
+        delayChildren: 0.1
       }
     }
   };
 
-  const stepItemEntranceVariants: Variants = { // For each individual step item
+  const stepItemEntranceVariants = {
     hidden: { opacity: 0, x: -20 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.4 }}
   };
@@ -71,42 +90,67 @@ const ServicesProcess = () => {
           Our On-Site Service Advantage
         </motion.h2>
 
-        <motion.div // This div uses sectionContainerVariants to stagger its direct children
+        <motion.div
           variants={sectionContainerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {/* First child: 2-column grid */}
-          <div className="grid md:grid-cols-2 gap-x-10 gap-y-8 mb-16 text-left">
-            <motion.div variants={contentBlockVariants}>
-              <h3 className="text-2xl font-semibold text-primary-blue mb-3">Direct To You Service</h3>
-              <p className="text-gray-700 mb-4 text-lg">
-                No more hauling your equipment to a shop! We provide expert small engine repairs right at your location, saving you time and hassle.
-              </p>
-              <p className="text-gray-700 text-lg">
-                Serving the greater Springfield area.
-              </p>
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-12 mb-16"> {/* Changed to lg:grid-cols-2 for better image display */}
+
+            {/* Block 1: Direct To You Service */}
+            <motion.div variants={imageContentBlockVariants} className="flex flex-col md:flex-row items-center gap-6 md:gap-8 text-center md:text-left">
+              <motion.div className="md:w-2/5 flex-shrink-0" variants={imageVariants}>
+                <Image
+                  src="/HeroMobileRepair1.png"
+                  alt="Organized mobile repair van interior"
+                  width={300}
+                  height={225}
+                  className="rounded-lg shadow-lg object-cover mx-auto"
+                />
+              </motion.div>
+              <motion.div className="md:w-3/5" variants={textVariants}>
+                <h3 className="text-2xl font-semibold text-primary-blue mb-3">Direct To You Service</h3>
+                <p className="text-gray-700 mb-4 text-lg">
+                  No more hauling your equipment to a shop! We provide expert small engine repairs right at your location, saving you time and hassle.
+                </p>
+                <p className="text-gray-700 text-lg">
+                  Serving the greater Springfield area.
+                </p>
+              </motion.div>
             </motion.div>
-            <motion.div variants={contentBlockVariants}>
-              <h3 className="text-2xl font-semibold text-primary-blue mb-3">Transparent Hourly Rates</h3>
-              <p className="text-gray-700 mb-4 text-lg">
-                We believe in clear, upfront pricing. Our services are billed by the hour, and we&apos;re proud to offer rates that often beat traditional in-shop repair costs.
-              </p>
-              <p className="text-gray-700 text-lg">
-                Contact us for our current hourly rate and an estimate for your specific needs.
-              </p>
+
+            {/* Block 2: Transparent Hourly Rates */}
+            <motion.div variants={imageContentBlockVariants} className="flex flex-col md:flex-row items-center gap-6 md:gap-8 text-center md:text-left md:flex-row-reverse"> {/* Added md:flex-row-reverse for variety */}
+              <motion.div className="md:w-2/5 flex-shrink-0" variants={imageVariants}>
+                <Image
+                  src="/HeroBluePrintEngine3.png"
+                  alt="Engine blueprint and carburetor"
+                  width={300}
+                  height={225}
+                  className="rounded-lg shadow-lg object-cover mx-auto"
+                />
+              </motion.div>
+              <motion.div className="md:w-3/5" variants={textVariants}>
+                <h3 className="text-2xl font-semibold text-primary-blue mb-3">Transparent Hourly Rates</h3>
+                <p className="text-gray-700 mb-4 text-lg">
+                  We believe in clear, upfront pricing. Our services are billed by the hour, and we're proud to offer rates that often beat traditional in-shop repair costs.
+                </p>
+                <p className="text-gray-700 text-lg">
+                  Contact us for our current hourly rate and an estimate for your specific needs.
+                </p>
+              </motion.div>
             </motion.div>
           </div>
 
-          {/* Second child: Process list block */}
+          {/* Process list block */}
           <motion.div variants={contentBlockVariants} className="max-w-3xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-semibold text-dark-gray mb-8 text-center">Our Simple Process</h3>
-            <motion.div // This motion.div will stagger the list items
+            <motion.div
               className="space-y-3"
               variants={processListContainerVariants}
               initial="hidden"
-              whileInView="visible" // Trigger when this specific block is in view
+              whileInView="visible"
               viewport={{ once: true }}
             >
               {processSteps.map((item, index) => (
@@ -114,7 +158,6 @@ const ServicesProcess = () => {
                   key={item.step}
                   className="bg-gray-50 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden"
                   variants={stepItemEntranceVariants}
-                  // `initial` and `animate` for these items are implicitly handled by parent's `staggerChildren`
                 >
                   <button
                     onClick={() => toggleStep(index)}
