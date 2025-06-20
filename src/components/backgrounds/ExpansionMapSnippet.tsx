@@ -21,7 +21,7 @@ const ExpansionMapSnippet = () => {
         duration: 2, // Slightly longer pulse
         repeat: Infinity,
         repeatType: "loop" as const, // Changed from "mirror" to "loop" for a more standard pulse
-        ease: "easeInOut"
+        ease: "easeInOut" as const
       }
     }
   };
