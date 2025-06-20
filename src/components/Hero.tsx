@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion'; // Added useMotionValue, useTransform
+
+import React, { useState, useRef } from 'react'; // Added useRef
+import { motion, useMotionValue, useTransform, useScroll } from 'framer-motion'; // Added useScroll
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
 
@@ -12,8 +13,10 @@ const Hero = () => {
   // For Hero Image Tilt Effect
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useTransform(y, [-100, 100], [10, -10]); // Max rotation 10 degrees for X-axis
-  const rotateY = useTransform(x, [-100, 100], [-10, 10]); // Max rotation 10 degrees for Y-axis
+
+  const rotateX = useTransform(y, [-100, 100], [10, -10]);
+  const rotateY = useTransform(x, [-100, 100], [-10, 10]);
+
 
   function handleMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -60,7 +63,9 @@ const Hero = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
-  const imageEntranceVariants = { // Renamed from imageVariants to avoid conflict with tilt logic
+
+  const imageEntranceVariants = {
+
     hidden: { opacity: 0, y: 50, scale: 0.95 },
     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
   };
@@ -84,12 +89,14 @@ const Hero = () => {
         .insert([{ email: email, created_at: new Date().toISOString() }]);
       if (error) {
         if (error.code === '23505') {
-          setMessage('This email has already been submitted. Thank you!');
+          setMessage('This email has already been submitted. We will be in touch!');
         } else {
           setMessage(`Error: ${error.message}`);
         }
       } else {
-        setMessage('Thank you! Your email has been submitted.');
+
+        setMessage('Thank you! We will contact you shortly to discuss your on-site service needs.');
+
         setEmail('');
       }
     } catch (error) {
@@ -101,11 +108,17 @@ const Hero = () => {
 
   return (
     <section
+
+      ref={heroRef} // Added ref
       id="hero"
-      className="flex items-center justify-center min-h-screen py-20 md:py-28 animated-hero-bg overflow-hidden"
+      className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden" // Base bg, relative
     >
+      <motion.div // Gradient Overlay
+        className="absolute inset-0 animated-hero-bg z-[1]" // z-index 1
+        style={{ opacity: gradientOpacity }}
+      />
       <motion.div
-        className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12"
+        className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12 relative z-[2]" // z-index 2 for content
         variants={heroContainerVariants}
         initial="hidden"
         whileInView="visible"
@@ -121,7 +134,9 @@ const Hero = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ staggerChildren: 0.05 }} // Adjusted word stagger directly here
+
+            transition={{ staggerChildren: 0.05 }}
+
           >
             {headlineWords.map((word, i) => (
               <motion.span
@@ -164,21 +179,24 @@ const Hero = () => {
                            transition-all duration-200 whitespace-nowrap active:scale-95 transform disabled:opacity-50 shadow-md"
                 disabled={isLoading}
               >
-                {isLoading ? 'Submitting...' : 'Request Free Demo'}
+
+                {isLoading ? 'Getting Quote...' : 'Get an On-Site Quote'}
+
               </button>
             </form>
             {message && (
               <motion.p
-                className={`mt-4 text-sm ${message.startsWith('Error:') || message.startsWith('Please enter') ? 'text-red-300' : 'text-green-300'}`}
+                className={`mt-4 text-sm ${message.includes('Error:') || message.startsWith('Please enter') ? 'text-red-300' : 'text-green-300'}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
               >
                 {message}
               </motion.p>
             )}
             {!message && (
               <p className="text-sm text-gray-300 mt-4">
-                Get started with a no-obligation demo.
+                Submit your email to start the quote process.
               </p>
             )}
           </motion.div>
@@ -186,12 +204,14 @@ const Hero = () => {
 
         {/* Image Side */}
         <motion.div
-          className="md:w-1/2 mt-10 md:mt-0 flex justify-center items-center" // Added flex justify/items center
-          variants={imageEntranceVariants} // Use the entrance variants
-          style={{ perspective: "1200px", rotateX, rotateY }} // Apply perspective and rotations here
+
+          className="md:w-1/2 mt-10 md:mt-0 flex justify-center items-center"
+          variants={imageEntranceVariants}
+          style={{ perspective: "1200px", rotateX, rotateY }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          transition={{ // Add a gentle transition for the rotation reset onMouseLeave
+          transition={{
+
             type: "spring",
             stiffness: 300,
             damping: 20,
@@ -204,7 +224,9 @@ const Hero = () => {
             height={450}
             className="rounded-lg shadow-2xl mx-auto"
             priority
-            style={{ transformStyle: "preserve-3d" }} // Ensure image itself can be part of 3D transform
+
+            style={{ transformStyle: "preserve-3d" }}
+
           />
         </motion.div>
       </motion.div>

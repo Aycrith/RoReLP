@@ -57,7 +57,9 @@ const Footer = () => {
             <h5 className="font-semibold text-neutral-white mb-4">Product</h5>
             <ul className="space-y-3">
               <li><Link href="#features" className="text-gray-400 hover:text-accent-gold transition-colors">Features</Link></li>
-              <li><Link href="#pricing" className="text-gray-400 hover:text-accent-gold transition-colors">Pricing</Link></li>
+
+              <li><Link href="#services" className="text-gray-400 hover:text-accent-gold transition-colors">Services</Link></li> {/* Updated href and text */}
+
               <li><Link href="/request-demo" className="text-gray-400 hover:text-accent-gold transition-colors">Schedule Demo</Link></li>
               <li><Link href="/signup" className="text-gray-400 hover:text-accent-gold transition-colors">Free Trial</Link></li>
             </ul>

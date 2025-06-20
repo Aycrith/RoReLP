@@ -3,7 +3,9 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import SubtleCircle from './backgrounds/SubtleCircle';
+
 import InteractiveCard from './InteractiveCard'; // Import InteractiveCard
+
 
 const featuresData = [
   {
@@ -48,6 +50,13 @@ const Features = () => {
     visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
   };
 
+
+  // Variants for icon container hover animation (background)
+  const iconContainerBgVariants = {
+    rest: { scale: 1, backgroundColor: "rgba(37, 99, 235, 0.1)" }, // primary-blue/10
+    hover: { scale: 1.1, backgroundColor: "var(--color-primary-blue)" }
+  };
+
   return (
     <motion.section
       ref={sectionRef}
@@ -88,21 +97,38 @@ const Features = () => {
               key={index}
               className="bg-gray-50 p-8 rounded-lg shadow-lg text-center flex flex-col items-center cursor-pointer"
               initialStyle={{ borderColor: "transparent", borderWidth: "2px", borderStyle: "solid" }}
-              variants={featureItemVariants} // Entrance animation for the card
-              whileHoverConfig={{ // Hover effects passed to InteractiveCard
+              variants={featureItemVariants}
+              whileHoverConfig={{
                 scale: 1.05,
                 boxShadow: "0px 15px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)",
                 borderColor: "var(--color-accent-gold)",
               }}
-              rotationFactor={3} // Slightly less rotation for feature cards
+
+              rotationFactor={3}
             >
-              <motion.div
+              <motion.div // Icon container
                 className="w-20 h-20 relative flex items-center justify-center rounded-full bg-primary-blue/10 p-3 mx-auto mb-6"
+                variants={iconContainerBgVariants} // For background and its own scale
+                initial="rest"
+                whileHover="hover" // This will trigger 'hover' variant on this and children with same variant name
+                transition={{ duration: 0.3 }}
               >
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2, duration: 0.4 }}
+                <motion.div // Inner div for icon image animation (entrance and responding to parent hover)
+                    variants={iconImageVariants} // For its own scale/rotate on parent hover
+                    initial={{ opacity: 0, scale: 0.5, y: 20, rotate: -15 }}
+                    // Animate prop driven by parent (InteractiveCard -> featureItemVariants)
+                    // For direct control related to card's inView, use whileInView here.
+                    // However, simpler to let card's variants control this block's appearance.
+                    // For simplicity, we'll use animate once the card is visible.
+                    // This animate will be triggered when featureItemVariants makes the card 'visible'.
+                    // We need to ensure this component animates once the card is visible.
+                    // The `featureItemVariants` on `InteractiveCard` handles initial visibility.
+                    // This inner animation should ideally be orchestrated by `featureItemVariants` too.
+                    // Let's simplify: entrance animation is part of featureItemVariants for the whole card.
+                    // The icon image itself will just have the hover reaction.
+                    // The initial entrance for the icon image is now:
+                    animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }} // Animate to this when parent card is 'visible'
+                    transition={{ delay: 0.4, duration: 0.5, type: "spring", stiffness: 200, damping: 15 }} // Delay after card, then spring in
                 >
                     <Image
                         src={feature.icon}

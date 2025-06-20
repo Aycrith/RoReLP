@@ -62,8 +62,9 @@ const Header = () => {
           <Link href="#features" className="text-dark-gray hover:text-primary-blue transition-colors">
             Features
           </Link>
-          <Link href="#pricing" className="text-dark-gray hover:text-primary-blue transition-colors">
-            Pricing
+
+          <Link href="#services" className="text-dark-gray hover:text-primary-blue transition-colors"> {/* Updated href and text */}
+            Services
           </Link>
           <Link href="#about" className="text-dark-gray hover:text-primary-blue transition-colors">
             About Us
@@ -107,11 +108,13 @@ const Header = () => {
                 Features
               </Link>
               <Link
-                href="#pricing"
+
+                href="#services" // Updated href
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-3 px-3 text-lg text-dark-gray hover:bg-gray-100 rounded-md transition-colors"
               >
-                Pricing
+                Services {/* Updated text */}
+
               </Link>
               <Link
                 href="#about"

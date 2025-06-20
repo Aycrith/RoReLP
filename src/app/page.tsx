@@ -7,7 +7,9 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import AboutUs from "@/components/AboutUs";
-import Pricing from "@/components/Pricing";
+
+import ServicesProcess from "@/components/ServicesProcess"; // Updated import
+
 import Testimonials from "@/components/Testimonials";
 import CallToAction from "@/components/CallToAction";
 import Footer from "@/components/Footer";
@@ -44,7 +46,7 @@ export default function Home() {
             <Hero />
             <Features />
             <AboutUs />
-            <Pricing />
+            <ServicesProcess /> {/* Updated component */}
             <Testimonials />
             <CallToAction />
           </main>
