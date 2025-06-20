@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image'; // For logo if included
+import Image from 'next/image';
+import { motion } from 'framer-motion'; // Import motion
 
 // Placeholder icons (actual SVGs or a library would be used in a real project)
 const SocialIcon = ({ href, children }: { href: string; children: React.ReactNode }) => (
@@ -17,7 +18,12 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Column 1: Logo & Company */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
+            viewport={{ once: true }}
+          >
             {/* Apply a class that might help with SVG visibility if it uses currentColor */}
             {/* For example, if SVG uses fill="currentColor", this 'text-neutral-white' would make it white. */}
             <Link href="/" className="flex items-center space-x-2 mb-4 text-neutral-white">
@@ -39,31 +45,46 @@ const Footer = () => {
             <p className="text-sm text-gray-500">
               <a href="mailto:support@royaltyrepair.com" className="hover:text-accent-gold transition-colors">support@royaltyrepair.com</a>
             </p>
-          </div>
+          </motion.div>
 
           {/* Column 2: Product */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.4 }}
+            viewport={{ once: true }}
+          >
             <h5 className="font-semibold text-neutral-white mb-4">Product</h5>
             <ul className="space-y-3">
               <li><Link href="#features" className="text-gray-400 hover:text-accent-gold transition-colors">Features</Link></li>
-              <li><Link href="#pricing" className="text-gray-400 hover:text-accent-gold transition-colors">Pricing</Link></li>
+              <li><Link href="#services" className="text-gray-400 hover:text-accent-gold transition-colors">Services</Link></li> {/* Updated href and text */}
               <li><Link href="/request-demo" className="text-gray-400 hover:text-accent-gold transition-colors">Schedule Demo</Link></li>
               <li><Link href="/signup" className="text-gray-400 hover:text-accent-gold transition-colors">Free Trial</Link></li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Column 3: Company */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            viewport={{ once: true }}
+          >
             <h5 className="font-semibold text-neutral-white mb-4">Company</h5>
             <ul className="space-y-3">
               <li><Link href="#about" className="text-gray-400 hover:text-accent-gold transition-colors">About Us</Link></li>
               {/* <li><Link href="/careers" className="text-gray-400 hover:text-accent-gold transition-colors">Careers</Link></li> */}
               {/* <li><Link href="/contact" className="text-gray-400 hover:text-accent-gold transition-colors">Contact</Link></li> */}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Column 4: Legal & Social */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.4 }}
+            viewport={{ once: true }}
+          >
             <h5 className="font-semibold text-neutral-white mb-4">Legal</h5>
             <ul className="space-y-3 mb-6">
               <li><Link href="/privacy-policy" className="text-gray-400 hover:text-accent-gold transition-colors">Privacy Policy</Link></li>
@@ -75,12 +96,18 @@ const Footer = () => {
               <SocialIcon href="https://twitter.com">TW</SocialIcon>
               <SocialIcon href="https://facebook.com">FB</SocialIcon>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        <div className="text-center text-sm text-gray-500 pt-8 border-t border-gray-700">
+        <motion.div
+          className="text-center text-sm text-gray-500 pt-8 border-t border-gray-700"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          viewport={{ once: true }}
+        >
           © {currentYear} Royalty Repair. All rights reserved.
-        </div>
+        </motion.div>
       </div>
     </footer>
   );
