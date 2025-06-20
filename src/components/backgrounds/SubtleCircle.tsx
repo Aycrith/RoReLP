@@ -34,7 +34,7 @@ const SubtleCircle: React.FC<SubtleCircleProps> = ({
   const opacity = useTransform(scrollYProgress, [0, 1], opacityRange);
   const scale = useTransform(scrollYProgress, [0, 1], scaleRange || [1, 1]); // Always call useTransform
 
-  const motionStyle: React.CSSProperties = { 
+  const motionStyle = { 
     y, 
     opacity, 
     scale,
