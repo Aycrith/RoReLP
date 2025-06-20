@@ -7,7 +7,9 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import AboutUs from "@/components/AboutUs";
+
 import ServicesProcess from "@/components/ServicesProcess"; // Updated import
+
 import Testimonials from "@/components/Testimonials";
 import CallToAction from "@/components/CallToAction";
 import Footer from "@/components/Footer";

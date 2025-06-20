@@ -3,7 +3,9 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import SubtleCircle from './backgrounds/SubtleCircle';
-import InteractiveCard from './InteractiveCard';
+
+import InteractiveCard from './InteractiveCard'; // Import InteractiveCard
+
 
 const featuresData = [
   {
@@ -43,23 +45,17 @@ const Features = () => {
     }
   };
 
-  const featureItemVariants = {
+  const featureItemVariants = { // Entrance animation for the card
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
   };
+
 
   // Variants for icon container hover animation (background)
   const iconContainerBgVariants = {
     rest: { scale: 1, backgroundColor: "rgba(37, 99, 235, 0.1)" }, // primary-blue/10
     hover: { scale: 1.1, backgroundColor: "var(--color-primary-blue)" }
   };
-
-  // Variants for icon image hover animation (reacts to parent container's hover)
-  const iconImageVariants = {
-    rest: { scale: 1, rotate: 0 },
-    hover: { scale: 1.15, rotate: 10 }
-  };
-
 
   return (
     <motion.section
@@ -107,6 +103,7 @@ const Features = () => {
                 boxShadow: "0px 15px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)",
                 borderColor: "var(--color-accent-gold)",
               }}
+
               rotationFactor={3}
             >
               <motion.div // Icon container

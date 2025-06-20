@@ -62,6 +62,7 @@ const Header = () => {
           <Link href="#features" className="text-dark-gray hover:text-primary-blue transition-colors">
             Features
           </Link>
+
           <Link href="#services" className="text-dark-gray hover:text-primary-blue transition-colors"> {/* Updated href and text */}
             Services
           </Link>
@@ -107,11 +108,13 @@ const Header = () => {
                 Features
               </Link>
               <Link
+
                 href="#services" // Updated href
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-3 px-3 text-lg text-dark-gray hover:bg-gray-100 rounded-md transition-colors"
               >
                 Services {/* Updated text */}
+
               </Link>
               <Link
                 href="#about"

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useRef } from 'react'; // Added useRef
 import { motion, useMotionValue, useTransform, useScroll } from 'framer-motion'; // Added useScroll
 import Image from 'next/image';
@@ -12,8 +13,10 @@ const Hero = () => {
   // For Hero Image Tilt Effect
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+
   const rotateX = useTransform(y, [-100, 100], [10, -10]);
   const rotateY = useTransform(x, [-100, 100], [-10, 10]);
+
 
   function handleMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -25,16 +28,6 @@ const Hero = () => {
     x.set(0);
     y.set(0);
   }
-
-  // For Gradient Fade
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-  // Gradient stays fully opaque for first 70% of its scroll out, then fades quickly.
-  const gradientOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
-
 
   const heroContainerVariants = {
     hidden: { opacity: 0 },
@@ -70,7 +63,9 @@ const Hero = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
+
   const imageEntranceVariants = {
+
     hidden: { opacity: 0, y: 50, scale: 0.95 },
     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
   };
@@ -99,7 +94,9 @@ const Hero = () => {
           setMessage(`Error: ${error.message}`);
         }
       } else {
+
         setMessage('Thank you! We will contact you shortly to discuss your on-site service needs.');
+
         setEmail('');
       }
     } catch (error) {
@@ -111,6 +108,7 @@ const Hero = () => {
 
   return (
     <section
+
       ref={heroRef} // Added ref
       id="hero"
       className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden" // Base bg, relative
@@ -136,7 +134,9 @@ const Hero = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
+
             transition={{ staggerChildren: 0.05 }}
+
           >
             {headlineWords.map((word, i) => (
               <motion.span
@@ -179,7 +179,9 @@ const Hero = () => {
                            transition-all duration-200 whitespace-nowrap active:scale-95 transform disabled:opacity-50 shadow-md"
                 disabled={isLoading}
               >
+
                 {isLoading ? 'Getting Quote...' : 'Get an On-Site Quote'}
+
               </button>
             </form>
             {message && (
@@ -202,12 +204,14 @@ const Hero = () => {
 
         {/* Image Side */}
         <motion.div
+
           className="md:w-1/2 mt-10 md:mt-0 flex justify-center items-center"
           variants={imageEntranceVariants}
           style={{ perspective: "1200px", rotateX, rotateY }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           transition={{
+
             type: "spring",
             stiffness: 300,
             damping: 20,
@@ -220,7 +224,9 @@ const Hero = () => {
             height={450}
             className="rounded-lg shadow-2xl mx-auto"
             priority
+
             style={{ transformStyle: "preserve-3d" }}
+
           />
         </motion.div>
       </motion.div>
