@@ -5,13 +5,18 @@ import { motion, AnimatePresence } from 'framer-motion'; // Import AnimatePresen
 
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import ExpansionOffer from "@/components/ExpansionOffer"; // New import
 import Features from "@/components/Features";
 import AboutUs from "@/components/AboutUs";
-import ServicesProcess from "@/components/ServicesProcess"; // Updated import
+import ServicesProcess from "@/components/ServicesProcess";
+import ServiceAreas from "@/components/ServiceAreas"; // New import
+import ProblemSolution from "@/components/ProblemSolution";
 import Testimonials from "@/components/Testimonials";
+import FAQ from "@/components/FAQ";
 import CallToAction from "@/components/CallToAction";
 import Footer from "@/components/Footer";
-import Preloader from '@/components/Preloader'; // Import Preloader
+import Preloader from '@/components/Preloader';
+import FloatingActionButton from '@/components/FloatingActionButton'; // New import
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,15 +47,20 @@ export default function Home() {
           <Header />
           <main>
             <Hero />
+            <ExpansionOffer /> {/* New component */}
             <Features />
             <AboutUs />
-            <ServicesProcess /> {/* Updated component */}
+            <ServicesProcess />
+            <ServiceAreas /> {/* New component */}
+            <ProblemSolution />
             <Testimonials />
+            <FAQ />
             <CallToAction />
           </main>
           <Footer />
         </motion.div>
       )}
+      <FloatingActionButton /> {/* Add FAB here */}
     </>
   );
 }

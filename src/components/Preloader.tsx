@@ -9,12 +9,12 @@ const Preloader = () => {
       className="fixed inset-0 bg-neutral-white z-[9999] flex flex-col items-center justify-center"
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.7 } }}
+      exit={{ opacity: 0, transition: { duration: 0.7, ease: "easeInOut" } }}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.6, ease: "backOut" }}
       >
         <Image
             src="/assets/icons/royalty-repairNOBACKGROUND.svg"

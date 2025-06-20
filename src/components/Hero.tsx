@@ -1,13 +1,17 @@
 "use client";
-import React, { useState, useRef } from 'react'; // Added useRef
-import { motion, useMotionValue, useTransform, useScroll } from 'framer-motion'; // Added useScroll
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useTransform, useScroll, AnimatePresence, Variants } from 'framer-motion'; // Added AnimatePresence
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
+import CheckIcon from './icons/CheckIcon'; // Import CheckIcon
+import XMarkIcon from './icons/XMarkIcon'; // Import XMarkIcon
 
 const Hero = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false); // Replaced with formStatus
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
 
   // For Hero Image Tilt Effect
   const x = useMotionValue(0);
@@ -26,16 +30,15 @@ const Hero = () => {
     y.set(0);
   }
 
-  // For Gradient Fade
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
   });
-  // Gradient stays fully opaque for first 70% of its scroll out, then fades quickly.
   const gradientOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
 
-  const heroContainerVariants = {
+
+  const heroContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -43,7 +46,7 @@ const Hero = () => {
     },
   };
 
-  const textContentContainerVariants = {
+  const textContentContainerVariants: Variants = {
     hidden: { opacity: 0, y:20 },
     visible: {
       opacity: 1, y:0,
@@ -55,7 +58,7 @@ const Hero = () => {
     },
   };
 
-  const wordVariants = {
+  const wordVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,
@@ -64,14 +67,14 @@ const Hero = () => {
     })
   };
 
-  const paragraphVariants = {
+  const paragraphVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
-  const imageEntranceVariants = {
+  const imageEntranceVariants: Variants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7 } }
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
   };
 
   const headlineText = "The #1 CRM for Small-Engine Repair Shops";
@@ -80,11 +83,12 @@ const Hero = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsLoading(true);
+    setFormStatus('submitting');
     setMessage('');
     if (!email) {
       setMessage('Please enter your email.');
-      setIsLoading(false);
+      setFormStatus('error'); // Changed to error status
+      setTimeout(() => { setFormStatus('idle'); setMessage(''); }, 3000);
       return;
     }
     try {
@@ -97,35 +101,40 @@ const Hero = () => {
         } else {
           setMessage(`Error: ${error.message}`);
         }
+        setFormStatus('error');
       } else {
         setMessage('Thank you! We will contact you shortly to discuss your on-site service needs.');
         setEmail('');
+        setFormStatus('success');
       }
     } catch {
       setMessage('An unexpected error occurred. Please try again.');
+      setFormStatus('error');
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false); // Not needed
+      if (formStatus !== 'submitting') { // Don't revert if still submitting (e.g. fast clicks)
+        setTimeout(() => { setFormStatus('idle'); setMessage(''); }, 3000);
+      }
     }
   };
 
   return (
     <section
-      ref={heroRef} // Added ref
+      ref={heroRef}
       id="hero"
-      className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden" // Base bg, relative
+      className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden"
     >
-      <motion.div // Gradient Overlay
-        className="absolute inset-0 animated-hero-bg z-[1]" // z-index 1
+      <motion.div
+        className="absolute inset-0 animated-hero-bg z-[1]"
         style={{ opacity: gradientOpacity }}
       />
       <motion.div
-        className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12 relative z-[2]" // z-index 2 for content
+        className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12 relative z-[2]"
         variants={heroContainerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
-        {/* Content Side */}
         <motion.div
           className="md:w-1/2 text-center md:text-left"
           variants={textContentContainerVariants}
@@ -169,16 +178,30 @@ const Hero = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                disabled={isLoading}
+                disabled={formStatus === 'submitting'} // Updated disabled state
               />
               <button
                 type="submit"
                 className="bg-accent-gold text-neutral-white px-6 py-3 rounded-lg font-semibold
+                           min-h-[48px] min-w-[200px] flex items-center justify-center
                            hover:bg-yellow-500 hover:shadow-lg hover:ring-2 hover:ring-yellow-300 hover:ring-opacity-50
                            transition-all duration-200 whitespace-nowrap active:scale-95 transform disabled:opacity-50 shadow-md"
-                disabled={isLoading}
+                disabled={formStatus === 'submitting'} // Updated disabled state
               >
-                {isLoading ? 'Getting Quote...' : 'Get an On-Site Quote'}
+                <AnimatePresence mode="wait" initial={false}>
+                  {formStatus === 'idle' && <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Get an On-Site Quote</motion.span>}
+                  {formStatus === 'submitting' && <motion.span key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Getting Quote...</motion.span>}
+                  {formStatus === 'success' && (
+                    <motion.div key="success" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center">
+                      <CheckIcon className="mr-2 text-neutral-white" /> Success!
+                    </motion.div>
+                  )}
+                  {formStatus === 'error' && (
+                    <motion.div key="error" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center">
+                      <XMarkIcon className="mr-2 text-neutral-white" /> Failed
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </button>
             </form>
             {message && (
@@ -199,7 +222,6 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* Image Side */}
         <motion.div
           className="md:w-1/2 mt-10 md:mt-0 flex justify-center items-center"
           variants={imageEntranceVariants}

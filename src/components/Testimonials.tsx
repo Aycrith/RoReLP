@@ -1,7 +1,6 @@
 "use client";
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'; // Added useScroll, useTransform, useMotionTemplate
 import React, { useRef } from 'react'; // Added useRef
-import Image from 'next/image';
 
 const testimonialsData = [
   {
@@ -62,7 +61,7 @@ const Testimonials = () => {
       // Initial section animation (overall fade/scale)
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, delay: 0.1 }}
+      transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
       viewport={{ once: true }}
     >
       <div className="container mx-auto px-4 text-center relative z-10">
@@ -82,18 +81,46 @@ const Testimonials = () => {
               className="bg-neutral-white p-8 rounded-lg shadow-lg flex flex-col items-center"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: baseCardDelay + index * 0.1 }} // Adjusted staggering
+              transition={{ duration: 0.6, delay: baseCardDelay + index * 0.1 }}
               viewport={{ once: true }}
-              whileHover={{ y: -5, boxShadow: "0px 15px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+              whileHover={{
+                scale: 1.05, // Added consistent scale
+                y: -5,
+                boxShadow: "0px 10px 20px -5px rgba(0, 0, 0, 0.1), 0px 8px 8px -5px rgba(0, 0, 0, 0.04)" // Adjusted shadow
+              }}
+              // transition prop for whileHover is part of the main transition prop or can be specified in whileHover
             >
-              {/* Optional: Avatar */}
-              <p className="text-gray-600 mb-6 italic text-lg relative">
-                <span className="absolute -top-3 -left-3 text-5xl text-primary-blue/30 font-serif">“</span>
-                {testimonial.quote}
-                <span className="absolute -bottom-3 -right-3 text-5xl text-primary-blue/30 font-serif">”</span>
-              </p>
-              <p className="font-bold text-lg text-dark-gray">{testimonial.name}</p>
-              <p className="text-sm text-gray-500">{testimonial.shop}</p>
+              <motion.div variants={cardContentContainerVariants} initial="hidden" animate="visible">
+                {/* Optional: Avatar
+                <Image
+                  src={testimonial.avatar}
+                  alt={testimonial.name}
+                  width={80}
+                  height={80}
+                  className="rounded-full mb-4 border-2 border-accent-gold"
+                />
+                */}
+                <motion.p
+                  className="text-gray-600 mb-6 italic text-lg relative"
+                  variants={cardTextItemVariants}
+                >
+                  <span className="absolute -top-3 -left-3 text-5xl text-primary-blue/30 font-serif">“</span>
+                  {testimonial.quote}
+                  <span className="absolute -bottom-3 -right-3 text-5xl text-primary-blue/30 font-serif">”</span>
+                </motion.p>
+                <motion.p
+                  className="font-bold text-lg text-dark-gray"
+                  variants={cardTextItemVariants}
+                >
+                  {testimonial.name}
+                </motion.p>
+                <motion.p
+                  className="text-sm text-gray-500"
+                  variants={cardTextItemVariants}
+                >
+                  {testimonial.shop}
+                </motion.p>
+              </motion.div>
             </motion.div>
           ))}
         </div>
