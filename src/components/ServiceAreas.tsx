@@ -17,11 +17,11 @@ const expansionAreas = [
 const ServiceAreas = () => {
   const cardVariants = {
     hidden: { opacity: 0, y: 30 }, // Increased y for more noticeable entry
-    visible: (i: number) => ({
+    visible: {
       opacity: 1,
       y: 0,
-      transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" } // Added ease
-    })
+      transition: { delay: 0.1, duration: 0.5, ease: "easeOut" as const } // Added ease
+    }
   };
 
   const sectionEntrance = {
@@ -77,7 +77,6 @@ const ServiceAreas = () => {
             {currentServiceAreas.map((area, index) => (
               <motion.div
                 key={`current-${area.name}`} // Use area.name for more stable key
-                custom={index}
                 variants={cardVariants}
                 // initial, whileInView, viewport inherited from parent section.
                 // Staggering is handled by cardVariants' custom delay.
@@ -102,7 +101,6 @@ const ServiceAreas = () => {
             {expansionAreas.map((area, index) => (
               <motion.div
                 key={`expansion-${area.name}`} // Use area.name for more stable key
-                custom={index}
                 variants={cardVariants}
                 className="p-6 bg-neutral-white rounded-xl shadow-lg border-2 border-accent-gold/30 hover:shadow-xl hover:border-accent-gold/60 transition-all duration-300"
               >
