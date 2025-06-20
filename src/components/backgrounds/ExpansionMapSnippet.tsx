@@ -8,7 +8,7 @@ const ExpansionMapSnippet = () => {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { delay: 0.8, duration: 0.5, type: 'spring', stiffness: 150 } // Delay after path animation
+      transition: { delay: 0.8, duration: 0.5, type: 'spring' as const, stiffness: 150 } // Delay after path animation
     }
   };
 
