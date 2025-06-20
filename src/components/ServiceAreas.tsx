@@ -74,7 +74,7 @@ const ServiceAreas = () => {
             Currently Serving
           </motion.h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"> {/* Adjusted gap */}
-            {currentServiceAreas.map((area, index) => (
+            {currentServiceAreas.map((area) => (
               <motion.div
                 key={`current-${area.name}`} // Use area.name for more stable key
                 variants={cardVariants}
@@ -98,7 +98,7 @@ const ServiceAreas = () => {
             Expanding Soon To
           </motion.h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"> {/* Adjusted gap */}
-            {expansionAreas.map((area, index) => (
+            {expansionAreas.map((area) => (
               <motion.div
                 key={`expansion-${area.name}`} // Use area.name for more stable key
                 variants={cardVariants}
