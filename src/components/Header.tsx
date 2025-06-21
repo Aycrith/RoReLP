@@ -12,9 +12,21 @@ const Header = () => {
   };
 
   const mobileMenuVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.2 } },
-    exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+    hidden: { opacity: 0, y: -10 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.15
+      } 
+    },
+    exit: { 
+      opacity: 0, 
+      y: -10,
+      transition: { 
+        duration: 0.15
+      } 
+    },
   };
 
   // Simple SVG components for icons
@@ -31,8 +43,8 @@ const Header = () => {
   );
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-neutral-white/80 shadow-md backdrop-blur-[10px]">
-      <div className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-white/70 dark:bg-slate-900/70 shadow-sm backdrop-blur-sm border-b border-white/10">
+      <div className="container mx-auto px-4 sm:px-6 py-2.5 flex justify-between items-center">
         {/* Logo Area */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -47,8 +59,8 @@ const Header = () => {
             <Image
               src="/assets/icons/royalty-repairNOBACKGROUND.svg"
               alt="Royalty Repair Logo"
-              width={150}
-              height={40}
+              width={130}
+              height={32}
               // className="rounded-full" // Removed as it's an SVG
             />
             <span className="text-lg md:text-xl font-semibold text-dark-gray sr-only"> {/* Added sr-only as logo text is in SVG */}
@@ -58,19 +70,19 @@ const Header = () => {
         </motion.div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex space-x-6 items-center">
-          <Link href="#features" className="text-dark-gray hover:text-primary-blue transition-colors">
+        <nav className="hidden md:flex space-x-4 items-center">
+          <Link href="#features" className="text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm font-medium">
             Features
           </Link>
-          <Link href="#services" className="text-dark-gray hover:text-primary-blue transition-colors"> {/* Updated href and text */}
+          <Link href="#services" className="text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm font-medium">
             Services
           </Link>
-          <Link href="#about" className="text-dark-gray hover:text-primary-blue transition-colors">
+          <Link href="#about" className="text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm font-medium">
             About Us
           </Link>
           <Link
             href="#get-started"
-            className="bg-primary-blue hover:bg-royal-purple text-neutral-white font-medium py-2 px-4 rounded-lg transition-colors active:scale-95 transform text-sm"
+            className="bg-grey-600 hover:bg-blue-700 text-white/90 font-medium py-1.5 px-4 rounded-lg transition-all active:scale-95 text-sm"
           >
             Get Started
           </Link>
@@ -81,7 +93,7 @@ const Header = () => {
           <button
             onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
-            className="p-2 rounded-md text-dark-gray focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-blue"
+            className="p-1.5 rounded-md text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
           >
             {isMobileMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
           </button>
@@ -96,7 +108,7 @@ const Header = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="md:hidden absolute top-full left-0 right-0 bg-neutral-white shadow-xl z-40" // z-40 to be below header but above content
+            className="md:hidden absolute top-full left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-lg z-40 border-t border-slate-100 dark:border-slate-800"
           >
             <nav className="flex flex-col space-y-1 px-4 py-3">
               <Link
@@ -107,23 +119,23 @@ const Header = () => {
                 Features
               </Link>
               <Link
-                href="#services" // Updated href
+                href="#services"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 px-3 text-lg text-dark-gray hover:bg-gray-100 rounded-md transition-colors"
+                className="block py-2.5 px-4 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-sm font-medium"
               >
-                Services {/* Updated text */}
+                Services
               </Link>
               <Link
                 href="#about"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 px-3 text-lg text-dark-gray hover:bg-gray-100 rounded-md transition-colors"
+                className="block py-2.5 px-4 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-sm font-medium"
               >
                 About Us
               </Link>
               <Link
                 href="#get-started"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block mt-2 py-3 px-3 text-lg text-center bg-primary-blue text-neutral-white rounded-md hover:bg-royal-purple transition-colors active:scale-95 transform"
+                className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all active:scale-95 text-sm mt-2 shadow-sm"
               >
                 Get Started
               </Link>

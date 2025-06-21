@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; // Added AnimatePresence
 import { supabase } from '../lib/supabaseClient';
 import ExpansionMapSnippet from './backgrounds/ExpansionMapSnippet';
-import CheckIcon from '../icons/CheckIcon'; // Import CheckIcon
-import XMarkIcon from '../icons/XMarkIcon'; // Import XMarkIcon
+import CheckIcon from './icons/CheckIcon'; // Updated import path
+import XMarkIcon from './icons/XMarkIcon'; // Updated import path
 
 const ExpansionOffer = () => {
   const [name, setName] = useState('');

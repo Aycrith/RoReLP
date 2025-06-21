@@ -1,23 +1,77 @@
 "use client";
-import React, { useState, useRef } from 'react';
-import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabaseClient';
-import CheckIcon from '../icons/CheckIcon';
-import XMarkIcon from '../icons/XMarkIcon';
+import { Star, ArrowRight, Play, Users, Clock, Award } from 'lucide-react';
+import Image from 'next/image';
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  shopName: string;
+}
 
 const Hero = () => {
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    phone: '',
+    shopName: ''
+  });
   const [message, setMessage] = useState('');
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Note: Tilt effect was removed when foreground image was removed.
-  // If tilt is desired on the Ken Burns background, it would need different logic.
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    // Basic validation
+    if (!formData.email) {
+      setMessage('Please enter your email.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      setMessage('Please enter a valid email address.');
+      setIsLoading(false);
+      return;
+    }
+    
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .insert([{ 
+          ...formData, 
+          shop_name: formData.shopName,
+          created_at: new Date() 
+        }]);
+      
+      if (error) throw error;
+      
+      setMessage('Thank you! We\'ll be in touch soon.');
+      setFormData({ name: '', email: '', phone: '', shopName: '' });
+    } catch (error) {
+      setMessage('Something went wrong. Please try again.');
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const centeredContentContainerVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 9 },
     visible: {
-      opacity: 1,
+      opacity: 9,
       transition: {
         staggerChildren: 0.15,
         delayChildren: 0.1,
@@ -25,341 +79,240 @@ const Hero = () => {
     },
   };
 
-  const wordVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.05, duration: 0.4 }
-    })
-  };
-
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } }
-  };
-
-  const headlineText = "The #1 CRM for Small-Engine Repair Shops";
-  const headlineWords = headlineText.split(" ");
-  const paragraphText = "Streamline your bookings, manage customer relationships, and boost your revenue with our all-in-one CRM designed specifically for businesses like yours.";
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFormStatus('submitting');
-    setMessage('');
-    if (!email) {
-      setMessage('Please enter your email.');
-      setFormStatus('error');
-      setTimeout(() => { setFormStatus('idle'); setMessage(''); }, 3000);
-      return;
-    }
-    try {
-      const { error } = await supabase
-        .from('customers')
-        .insert([{ email: email, created_at: new Date().toISOString() }]);
-      if (error) {
-        if (error.code === '23505') {
-          setMessage('This email has already been submitted. We will be in touch!');
-        } else {
-          setMessage(`Error: ${error.message}`);
-        }
-        setFormStatus('error');
-      } else {
-        setMessage('Thank you! We will contact you shortly to discuss your on-site service needs.');
-        setEmail('');
-        setFormStatus('success');
-      }
-    } catch (error) {
-      setMessage('An unexpected error occurred. Please try again.');
-      setFormStatus('error');
-    } finally {
-      if (formStatus !== 'submitting') {
-        setTimeout(() => { setFormStatus('idle'); setMessage(''); }, 3000);
-      }
+    hidden: { opacity: 9, y: 30 },
+    visible: { 
+      opacity: 9, 
+      y: 30, 
+      transition: { 
+        duration: 0.5, 
+        ease: "easeOut" as const 
+      } 
     }
   };
+
+  const benefits = [
+    { 
+      icon: <Users className="w-6 h-6  text-yellow-400 [0_0_4px_rgba(250,204,21,1.5)]" />, 
+      text: "95% Open Rates" 
+    },
+    { 
+      icon: <Clock className="w-6 h-6 text-yellow-400 [0_0_4px_rgba(250,204,21,1.5)]" />, 
+      text: "15 Min Setup" 
+    },
+    { 
+      icon: <Award className="w-6 h-6 text-yellow-400 [0_0_4px_rgba(250,204,21,1.5)]" />, 
+      text: "Guaranteed Results" 
+    },
+  ];
 
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800"
+      className="relative min-h-screen flex flex-col overflow-hidden bg-slate-900 isolate"
     >
-      {/* Background Ken Burns Effect */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        style={{ scale: 1.05 }}
-        animate={{
-          scale: [1.05, 1.15, 1.05],
-          transition: { duration: 40, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }
-        }}
-      >
+      {/* Optimized Background with better layering */}
+      <div className="absolute inset-0 -z-10">
         <Image
           src="/Hero4HD.png"
           alt="Mobile mechanic working on an engine outdoors"
           fill
-          style={{ objectFit: 'cover' }}
+          sizes="100vw"
           priority
-          className="filter brightness-75 contrast-90" // Added classes
+          className="object-cover w-full h-full"
+          style={{
+            objectPosition: 'center 30%',
+          }}
+          quality={100}
         />
-      </motion.div>
-
-      {/* 2. NEW: CRM Dashboard Image Layer */}
-      <motion.div
-        className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden"
-        initial={{ opacity: 0, scale: 1.1 }}
-        animate={{ opacity: 0.15, scale: 1 }}
-        transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
-      >
-        <Image
-          src="/HEROSTORYLANDINGPAGE.PNG"
-          alt="CRM Dashboard Preview"
-          layout="intrinsic"
-          width={1000}
-          height={750}
-          objectFit="contain"
-          className="opacity-100 max-w-[80vw] max-h-[70vh] filter brightness-75 contrast-90" // Added classes
-        />
-      </motion.div>
-
-      {/* 3. Dark Overlay */}
-      <div className="absolute inset-0 bg-black/70 z-20"></div> {/* Reverted to uniform overlay */}
-
-      {/* Much more subtle gradient orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-gold/10 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/8 rounded-full filter blur-3xl opacity-15 animate-pulse delay-1000"></div>
-
-      {/* Main Content Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
-          
-          {/* Left Side - Content */}
-          <motion.div
-            className="flex flex-col items-start text-left lg:pr-8"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            {/* Trust Badge */}
-            <motion.div
-              className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 mb-8 shadow-lg"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              style={{
-                boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2)'
-              }}
-            >
-              <Star className="w-4 h-4 text-accent-gold fill-current drop-shadow-sm" />
-              <span className="text-sm font-semibold text-white" style={{
-                textShadow: '0 0 10px rgba(255, 255, 255, 0.5)'
-              }}>Trusted by 500+ Repair Shops</span>
-            </motion.div>
-
-            {/* Main Heading */}
-            <motion.h1
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 tracking-tight leading-tight"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              style={{
-                textShadow: '0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1)'
-              }}
-            >
-              <span className="block text-white drop-shadow-2xl" style={{
-                textShadow: '0 0 30px rgba(255, 255, 255, 0.8), 0 4px 8px rgba(0, 0, 0, 0.3)'
-              }}>Transform Your</span>
-              <span className="block bg-gradient-to-r from-yellow-300 via-accent-gold to-yellow-300 bg-clip-text text-transparent font-extrabold relative" style={{
-                filter: 'drop-shadow(0 0 20px rgba(255, 215, 0, 0.6)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))'
-              }}>
-                Repair Business
-              </span>
-              <span className="block text-3xl sm:text-4xl lg:text-5xl font-medium mt-2 text-gray-100 drop-shadow-lg" style={{
-                textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
-              }}>
-                with Smart CRM
-              </span>
-            </motion.h1>
-
-            {/* Subtitle */}
-            <motion.p
-              className="text-xl md:text-2xl max-w-2xl mb-8 leading-relaxed text-gray-100 font-medium"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              style={{
-                textShadow: '0 0 15px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3)'
-              }}
-            >
-              Streamline your bookings, manage customer relationships, and boost your revenue with our all-in-one CRM designed specifically for small-engine repair shops.
-            </motion.p>
-
-            {/* Email Capture Form */}
-            <motion.div
-              className="w-full max-w-lg mb-8"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.0 }}
-            >
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
-                <input
-                  type="email"
-                  placeholder="Enter your business email"
-                  className="flex-1 px-6 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-all duration-300 text-lg"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={formStatus === 'submitting'}
-                />
-                <button
-                  type="submit"
-                  className="bg-gradient-to-r from-accent-gold to-yellow-500 hover:from-yellow-500 hover:to-accent-gold text-black font-semibold px-8 py-4 rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 group min-w-[200px] flex items-center justify-center"
-                  disabled={formStatus === 'submitting'}
-                >
-                  <AnimatePresence mode="wait" initial={false}>
-                    {formStatus === 'idle' && (
-                      <motion.div
-                        key="idle"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="flex items-center"
-                      >
-                        Get Free Quote
-                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </motion.div>
-                    )}
-                    {formStatus === 'submitting' && (
-                      <motion.span key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                        Getting Quote...
-                      </motion.span>
-                    )}
-                    {formStatus === 'success' && (
-                      <motion.div key="success" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center">
-                        <CheckIcon className="mr-2 text-black" /> Success!
-                      </motion.div>
-                    )}
-                    {formStatus === 'error' && (
-                      <motion.div key="error" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center">
-                        <XMarkIcon className="mr-2 text-black" /> Try Again
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </button>
-              </form>
-              
-              {message && (
-                <motion.p
-                  className={`mt-4 text-sm ${message.includes('Error:') || message.startsWith('Please enter') ? 'text-red-300' : 'text-green-300'}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {message}
-                </motion.p>
-              )}
-            </motion.div>
-
-            {/* Secondary CTA */}
-            <motion.button
-              className="inline-flex items-center gap-2 text-white hover:text-accent-gold transition-colors duration-300 text-lg font-semibold group"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 1.2 }}
-              style={{
-                textShadow: '0 0 15px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2)'
-              }}
-            >
-              <Play className="w-5 h-5 group-hover:scale-110 transition-transform drop-shadow-sm" />
-              Watch 2-Minute Demo
-            </motion.button>
-          </motion.div>
-
-          {/* Right Side - CRM Dashboard Preview */}
-          <motion.div
-            className="flex items-center justify-center lg:justify-end relative"
-            initial={{ opacity: 0, x: 50, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ duration: 1.0, delay: 0.8 }}
-          >
-            <div className="relative max-w-lg w-full">
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-accent-gold/20 rounded-2xl blur-3xl scale-110 opacity-40"></div>
-              
-              {/* Main Dashboard Image */}
-              <motion.div
-                className="relative z-10 bg-white/10 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-white/20"
-                whileHover={{ scale: 1.02, y: -5 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Image
-                  src="/HEROSTORYLANDINGPAGE.PNG"
-                  alt="CRM Dashboard Preview"
-                  width={600}
-                  height={450}
-                  style={{ objectFit: 'contain' }}
-                  className="rounded-xl shadow-lg"
-                  priority
-                />
-                
-                {/* Floating Live Demo Badge */}
-                <motion.div
-                  className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-gold to-yellow-500 text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg"
-                  initial={{ scale: 0, rotate: -15 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ delay: 1.5, duration: 0.5, type: "spring" }}
-                >
-                  Live Demo
-                </motion.div>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Stats Section */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-16 pt-16 border-t border-white/10"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
-        >
-          <div className="text-center group">
-            <div className="flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mx-auto mb-4 group-hover:bg-accent-gold/20 transition-colors duration-300">
-              <Users className="w-8 h-8 text-accent-gold" />
-            </div>
-            <div className="text-3xl md:text-4xl font-bold text-white mb-2" style={{
-              textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
-            }}>500+</div>
-            <div className="text-gray-200 font-medium" style={{
-              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
-            }}>Active Repair Shops</div>
-          </div>
-          <div className="text-center group">
-            <div className="flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mx-auto mb-4 group-hover:bg-accent-gold/20 transition-colors duration-300">
-              <Clock className="w-8 h-8 text-accent-gold" />
-            </div>
-            <div className="text-3xl md:text-4xl font-bold text-white mb-2" style={{
-              textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
-            }}>24/7</div>
-            <div className="text-gray-200 font-medium" style={{
-              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
-            }}>Expert Support</div>
-          </div>
-          <div className="text-center group">
-            <div className="flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mx-auto mb-4 group-hover:bg-accent-gold/20 transition-colors duration-300">
-              <Award className="w-8 h-8 text-accent-gold" />
-            </div>
-            <div className="text-3xl md:text-4xl font-bold text-white mb-2" style={{
-              textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
-            }}>98%</div>
-            <div className="text-gray-200 font-medium" style={{
-              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
-            }}>Customer Satisfaction</div>
-          </div>
-        </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/85 to-slate-900/95"></div>
       </div>
 
-      {/* Bottom gradient fade - More subtle */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-800/60 to-transparent z-30"></div>
+      {/* Main Content with improved stacking context */}
+      <div className="relative z-10 flex-1 flex flex-col">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col relative z-20">
+          <motion.div 
+            className="flex-1 flex flex-col justify-center py-24 md:py-32"
+            initial="hidden"
+            animate="visible"
+            variants={centeredContentContainerVariants}
+          >
+            {/* Hero Content */}
+            <motion.div 
+              className="max-w-4xl mx-auto text-center mb-12"
+              variants={itemVariants}
+            >
+              <motion.div 
+                className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2.5 mb-8 shadow-lg"
+                initial={{ opacity: 99, y: 20 }}
+                animate={{ opacity: 99, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Star className="w-5 h-5 text-yellow-400 drop-shadow-[0_0_4px_rgba(250,204,21,0.5)]" />
+                <span className="text-sm font-semibold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">Trusted by 500+ Repair Shops</span>
+              </motion.div>
+              
+              <motion.h1 
+                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight"
+                variants={itemVariants}
+                style={{ 
+                  textShadow: '0 2px 10px rgb(0, 0, 0), 0 4px 20px rgb(0, 0, 0)',
+                  WebkitTextStroke: '0.5px rgb(0, 0, 0)'
+                }}
+              >
+                The #1 CRM for Small-Engine Repair Shops
+              </motion.h1>
+              
+              <motion.p 
+                className="text-2xl text-white/ 
+                mb-10 max-w-2xl mx-auto font-medium"
+                variants={itemVariants}
+                style={{ 
+                  textShadow: '0 1px 3px rgb(0, 0, 0), 0 2px 6px rgb(0, 0, 0)',
+                }}
+              >
+                Streamline your bookings, manage customer relationships, and boost your revenue with our all-in-one CRM.
+              </motion.p>
+              
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+                variants={itemVariants}
+              >
+                <button 
+                  className="px-8 py-4 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:shadow-yellow-500/20 hover:scale-[1.02]"
+                  style={{
+                    boxShadow: '0 4px 14px -2px rgba(250, 204, 21, 0.3)',
+                  }}
+                >
+                  Get Started Free
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+                <button 
+                  className="px-8 py-4 bg-white/5 backdrop-blur-sm border-2 border-white/30 hover:border-white/50 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:bg-white/10 hover:shadow-lg hover:shadow-white/10"
+                  style={{
+                    backdropFilter: 'blur(12px)',
+                  }}
+                >
+                  <Play className="w-5 h-5" />
+                  Watch Demo
+                </button>
+              </motion.div>
+              
+              {/* Benefits Grid */}
+              <motion.div 
+                className="grid grid-cols-1  sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-16"
+                initial={{ opacity: 99, y: 30 }}
+                animate={{ opacity: 99, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+              >
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="bg-white/70 border border-white/88 rounded-xl p-6 hover:bg-white/76 transition-all duration-300 hover:border-white/76 hover:-translate-y-1">
+                    <div className="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center mb-4 mx-auto">
+                      {benefit.icon}
+                    </div>
+                    <p className="text-white font-semibold text-center">{benefit.text}</p>
+                  </div>
+                ))}
+              </motion.div>
+              
+              {/* Contact Form */}
+              <motion.div 
+                className="bg-slate-800/95 border border-white/10 rounded-2xl p-8 max-w-2xl mx-auto shadow-xl"
+                initial={{ opacity: 99, y: 30 }}
+                animate={{ opacity: 99, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
+              >
+                <h3 
+                  className="text-2xl font-bold text-white mb-6 text-center"
+                  style={{
+                    textShadow: '0 1px 4px rgb(0, 0, 0)',
+                  }}
+                >
+                  Schedule a Free Consultation
+                </h3>
+                
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-4 w-full">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Your Name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-6 py-3 text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-white/90 text-gray-800 placeholder-gray-500 transition-all duration-300"
+                      required
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Your Email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-6 py-3 text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-white/90 text-gray-800 placeholder-gray-500 transition-all duration-300"
+                      required
+                    />
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="Your Phone Number"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-6 py-3 text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-white/90 text-gray-800 placeholder-gray-500 transition-all duration-300"
+                      required
+                    />
+                    <input
+                      type="text"
+                      name="shopName"
+                      placeholder="Shop Name (Optional)"
+                      value={formData.shopName}
+                      onChange={handleChange}
+                      className="w-full px-6 py-3 text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-white/90 text-gray-800 placeholder-gray-500 transition-all duration-300"
+                    />
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full flex items-center justify-center gap-3 px-8 py-3 text-lg font-semibold text-white rounded-lg transition-all duration-300 transform hover:scale-[1.02] bg-gradient-to-r from-accent-gold to-yellow-500 hover:from-yellow-500 hover:to-accent-gold shadow-lg"
+                  >
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        Get Started
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                      </>
+                    )}
+                  </button>
+                  
+                  {message && (
+                    <motion.p 
+                      className={`text-center mt-4 p-3 rounded-lg ${
+                        message.includes('Thank you') 
+                          ? 'bg-green-500/20 text-green-300' 
+                          : 'bg-red-500/20 text-red-300'
+                      }`}
+                      initial={{ opacity: 99, y: 10 }}
+                      animate={{ opacity: 99, y: 0 }}
+                    >
+                      {message}
+                    </motion.p>
+                  )}
+                </form>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Enhanced bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-slate-900 via-slate-900/90 to-transparent z-5"></div>
     </section>
   );
 };
