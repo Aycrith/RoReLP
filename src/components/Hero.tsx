@@ -1,11 +1,10 @@
 "use client";
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
-import CheckIcon from './icons/CheckIcon';
-import XMarkIcon from './icons/XMarkIcon';
-import { ArrowRight, Play, Star, Users, Award, Clock } from 'lucide-react';
+import CheckIcon from '../icons/CheckIcon';
+import XMarkIcon from '../icons/XMarkIcon';
 
 const Hero = () => {
   const [email, setEmail] = useState('');
@@ -70,7 +69,7 @@ const Hero = () => {
         setEmail('');
         setFormStatus('success');
       }
-    } catch {
+    } catch (error) {
       setMessage('An unexpected error occurred. Please try again.');
       setFormStatus('error');
     } finally {
@@ -100,14 +99,30 @@ const Hero = () => {
           fill
           style={{ objectFit: 'cover' }}
           priority
+          className="filter brightness-75 contrast-90" // Added classes
         />
       </motion.div>
 
-      {/* Subtle Gradient Overlay - Much more transparent to preserve image depth */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900/85 via-slate-800/80 to-slate-900/90"></div>
+      {/* 2. NEW: CRM Dashboard Image Layer */}
+      <motion.div
+        className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden"
+        initial={{ opacity: 0, scale: 1.1 }}
+        animate={{ opacity: 0.15, scale: 1 }}
+        transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
+      >
+        <Image
+          src="/HEROSTORYLANDINGPAGE.PNG"
+          alt="CRM Dashboard Preview"
+          layout="intrinsic"
+          width={1000}
+          height={750}
+          objectFit="contain"
+          className="opacity-100 max-w-[80vw] max-h-[70vh] filter brightness-75 contrast-90" // Added classes
+        />
+      </motion.div>
 
-      {/* Background decorative elements - Reduced opacity */}
-      <div className="absolute inset-0 z-15 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%224%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-10"></div>
+      {/* 3. Dark Overlay */}
+      <div className="absolute inset-0 bg-black/70 z-20"></div> {/* Reverted to uniform overlay */}
 
       {/* Much more subtle gradient orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-gold/10 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
