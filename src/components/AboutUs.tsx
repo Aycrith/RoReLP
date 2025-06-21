@@ -1,5 +1,5 @@
 "use client";
-import { motion, useScroll } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import React, { useRef } from 'react';
 import Image from 'next/image'; // Import Image
 import SubtleCircle from './backgrounds/SubtleCircle';

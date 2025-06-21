@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
-import CheckIcon from './icons/CheckIcon';
-import XMarkIcon from './icons/XMarkIcon';
+import CheckIcon from '../icons/CheckIcon';
+import XMarkIcon from '../icons/XMarkIcon';
 
 const Hero = () => {
   const [email, setEmail] = useState('');
@@ -69,7 +69,7 @@ const Hero = () => {
         setEmail('');
         setFormStatus('success');
       }
-    } catch {
+    } catch (error) {
       setMessage('An unexpected error occurred. Please try again.');
       setFormStatus('error');
     } finally {
@@ -99,6 +99,7 @@ const Hero = () => {
           layout="fill"
           objectFit="cover"
           priority
+          className="filter brightness-75 contrast-90" // Added classes
         />
       </motion.div>
 
@@ -106,25 +107,23 @@ const Hero = () => {
       <motion.div
         className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden"
         initial={{ opacity: 0, scale: 1.1 }}
-        animate={{ opacity: 0.15, scale: 1 }} // Reduced final opacity for more subtlety
-        transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }} // Increased delay slightly
+        animate={{ opacity: 0.15, scale: 1 }}
+        transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
       >
         <Image
-          src="/HEROSTORYLANDINGPAGE.PNG" // User needs to provide this image
+          src="/HEROSTORYLANDINGPAGE.PNG"
           alt="CRM Dashboard Preview"
-          layout="intrinsic" // Changed to intrinsic to allow natural sizing up to a point
-          width={1000} // Example width, adjust based on image and desired max size
-          height={750} // Example height
+          layout="intrinsic"
+          width={1000}
+          height={750}
           objectFit="contain"
-          className="opacity-100 max-w-[80vw] max-h-[70vh]" // Tailwind classes for responsiveness
+          className="opacity-100 max-w-[80vw] max-h-[70vh] filter brightness-75 contrast-90" // Added classes
         />
       </motion.div>
 
-      {/* 3. Dark Radial Gradient Overlay */}
-      <div
-        className="absolute inset-0 z-20"
-        style={{ background: 'radial-gradient(ellipse at center, rgba(17,24,39,0.45) 0%, rgba(17,24,39,0.85) 70%, rgba(17,24,39,1) 100%)' }} // Softer center, darker edges
-      ></div>
+
+      {/* 3. Dark Overlay */}
+      <div className="absolute inset-0 bg-black/70 z-20"></div> {/* Reverted to uniform overlay */}
 
       {/* 4. Centered Content */}
       <motion.div
