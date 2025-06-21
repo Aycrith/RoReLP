@@ -153,22 +153,25 @@ const Hero = () => {
               </motion.div>
               
               <motion.h1 
-                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight"
-                variants={itemVariants}
+                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white/90 mb-6 leading-tight"
                 style={{ 
-                  textShadow: '0 2px 10px rgb(0, 0, 0), 0 4px 20px rgb(0, 0, 0)',
-                  WebkitTextStroke: '0.5px rgb(0, 0, 0)'
+                  textShadow: '0 1px 4px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6), 0 4px 24px rgba(0, 0, 0, 0.4)',
+                  WebkitTextStroke: '1px rgba(255, 255, 255, 0.3)',
+                  filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.24))',
+                  color: 'rgba(255, 255, 255, 0.98)'
                 }}
               >
                 The #1 CRM for Small-Engine Repair Shops
               </motion.h1>
               
               <motion.p 
-                className="text-2xl text-white/ 
-                mb-10 max-w-2xl mx-auto font-medium"
-                variants={itemVariants}
+                className="text-2xl text-white/90 mb-10 max-w-2xl mx-auto font-medium relative z-10 px-6 py-4 rounded-lg"
                 style={{ 
-                  textShadow: '0 1px 3px rgb(0, 0, 0), 0 2px 6px rgb(0, 0, 0)',
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.9), 0 2px 8px rgba(0, 0, 0, 0.7)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  backdropFilter: 'blur(8px)',
+                  lineHeight: '1.6',
+                  color: 'rgba(255, 255, 255, 0.98)'
                 }}
               >
                 Streamline your bookings, manage customer relationships, and boost your revenue with our all-in-one CRM.
@@ -201,12 +204,12 @@ const Hero = () => {
               {/* Benefits Grid */}
               <motion.div 
                 className="grid grid-cols-1  sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-16"
-                initial={{ opacity: 99, y: 30 }}
-                animate={{ opacity: 99, y: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
               >
                 {benefits.map((benefit, index) => (
-                  <div key={index} className="bg-white/70 border border-white/88 rounded-xl p-6 hover:bg-white/76 transition-all duration-300 hover:border-white/76 hover:-translate-y-1">
+                  <div key={index} className="bg-white/77 border border-white/88 rounded-xl p-6 hover:bg-white/76 transition-all duration-300 hover:border-white/76 hover:-translate-y-1">
                     <div className="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center mb-4 mx-auto">
                       {benefit.icon}
                     </div>
@@ -223,9 +226,9 @@ const Hero = () => {
                 transition={{ delay: 0.8, duration: 0.5 }}
               >
                 <h3 
-                  className="text-2xl font-bold text-white mb-6 text-center"
+                  className="text-2xl font-bold text-white/90 mb-6 text-center"
                   style={{
-                    textShadow: '0 1px 4px rgb(0, 0, 0)',
+                    textShadow: '0 1px 4px rgb(255, 255, 255)',
                   }}
                 >
                   Schedule a Free Consultation
