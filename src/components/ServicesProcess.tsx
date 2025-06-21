@@ -5,9 +5,9 @@ import Image from 'next/image'; // Added Image import
 
 const processSteps = [
   { step: 1, title: "Contact Us:", detail: "Briefly describe your issue and location.", moreInfo: "You can reach us by phone at (555) 123-4567 or email us at service@royaltyrepair.app." },
-  { step: 2, title: "Get an Estimate:", detail: "We'll provide an estimated time and cost.", moreInfo: "Our estimates are based on common repair times and our competitive hourly rate. Parts are billed separately if needed." },
+  { step: 2, title: "Get an Estimate:", detail: "We&apos;ll provide an estimated time and cost.", moreInfo: "Our estimates are based on common repair times and our competitive hourly rate. Parts are billed separately if needed." },
   { step: 3, title: "Schedule Service:", detail: "We arrange a convenient time to come to you.", moreInfo: "We aim for same-day or next-day service when possible and will work with your schedule." },
-  { step: 4, title: "Expert On-Site Repair:", detail: "Our technician performs the repair efficiently.", moreInfo: "We carry a wide range of common parts. If a special part needs ordering, we'll discuss options and timing with you." },
+  { step: 4, title: "Expert On-Site Repair:", detail: "Our technician performs the repair efficiently.", moreInfo: "We carry a wide range of common parts. If a special part needs ordering, we&apos;ll discuss options and timing with you." },
   { step: 5, title: "Pay & Go:", detail: "Simple payment once the job is done to your satisfaction.", moreInfo: "We accept cash, checks, and major credit/debit cards on-site for your convenience." }
 ];
 
@@ -31,7 +31,7 @@ const ServicesProcess = () => {
 
   const contentBlockVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } }
   };
 
   const imageContentBlockVariants = { // Specific for blocks that contain an image and text
@@ -39,13 +39,13 @@ const ServicesProcess = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: "easeOut", staggerChildren: 0.15, delayChildren: 0.1 }
+      transition: { duration: 0.5, ease: "easeOut" as const, staggerChildren: 0.15, delayChildren: 0.1 }
     }
   };
 
   const imageVariants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" as const } }
   };
 
   const textVariants = { // For h3 and p within imageContentBlockVariants
@@ -76,7 +76,7 @@ const ServicesProcess = () => {
       className="py-16 md:py-20 bg-neutral-white overflow-hidden"
       initial={{ opacity: 0, x: 50 }}
       whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay: 0.05, ease: "easeInOut" }}
+      transition={{ duration: 0.7, delay: 0.05, ease: "easeInOut" as const }}
       viewport={{ once: true }}
     >
       <div className="container mx-auto px-4">
@@ -134,7 +134,7 @@ const ServicesProcess = () => {
               <motion.div className="md:w-3/5" variants={textVariants}>
                 <h3 className="text-2xl font-semibold text-primary-blue mb-3">Transparent Hourly Rates</h3>
                 <p className="text-gray-700 mb-4 text-lg">
-                  We believe in clear, upfront pricing. Our services are billed by the hour, and we're proud to offer rates that often beat traditional in-shop repair costs.
+                  We believe in clear, upfront pricing. Our services are billed by the hour, and we&apos;re proud to offer rates that often beat traditional in-shop repair costs.
                 </p>
                 <p className="text-gray-700 text-lg">
                   Contact us for our current hourly rate and an estimate for your specific needs.

@@ -50,3 +50,17 @@ button {
 }
 
 /* Removed .animated-hero-bg and @keyframes gradientShift */
+
+/* Subtle glow effect for enhanced text visibility */
+.subtle-glow {
+  animation: subtleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes subtleGlow {
+  from {
+    filter: drop-shadow(0 0 5px rgba(173, 216, 230, 0.3));
+  }
+  to {
+    filter: drop-shadow(0 0 8px rgba(173, 216, 230, 0.4)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
+  }
+}

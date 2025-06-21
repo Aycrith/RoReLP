@@ -61,7 +61,7 @@ const Features = () => {
       scale: 1.25,
       rotate: [0, 5, -5, 5, -5, 0], // Wiggle effect
       y: [0, -5, 0], // Jump effect
-      transition: { duration: 0.5, ease: "easeInOut" }
+      transition: { duration: 0.5, ease: "easeInOut" as const }
     }
   };
 

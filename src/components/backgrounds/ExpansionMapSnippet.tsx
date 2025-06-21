@@ -5,25 +5,25 @@ import { motion } from 'framer-motion';
 const ExpansionMapSnippet = () => {
   const cityVariants = {
     hidden: { opacity: 0, scale: 0.5 },
-    visible: (i: number) => ({
+    visible: {
       opacity: 1,
       scale: 1,
-      transition: { delay: 0.8 + i * 0.3, duration: 0.5, type: 'spring', stiffness: 150 } // Delay after path animation
-    })
+      transition: { delay: 0.8, duration: 0.5, type: 'spring' as const, stiffness: 150 } // Delay after path animation
+    }
   };
 
   const pulseVariants = {
-    pulse: (i: number) => ({
+    pulse: {
       scale: [1, 1.2, 1], // Adjusted pulse scale
       opacity: [0.6, 0.9, 0.6], // Adjusted opacity
       transition: {
-        delay: 1.5 + i * 0.2, // Stagger pulse start further after initial appearance
+        delay: 1.5, // Stagger pulse start further after initial appearance
         duration: 2, // Slightly longer pulse
         repeat: Infinity,
-        repeatType: "loop", // Changed from "mirror" to "loop" for a more standard pulse
-        ease: "easeInOut"
+        repeatType: "loop" as const, // Changed from "mirror" to "loop" for a more standard pulse
+        ease: "easeInOut" as const
       }
-    })
+    }
   };
 
   const cities = [
@@ -50,10 +50,9 @@ const ExpansionMapSnippet = () => {
           transition={{ duration: 1.2, delay: 0.5, ease: "easeInOut" }}
         />
 
-        {cities.map((city, i) => (
+        {cities.map((city) => (
           <motion.g
             key={city.name}
-            custom={i}
             initial="hidden"
             // Animate prop will be triggered by parent's whileInView
             // For direct control with delay, use whileInView here too or ensure parent orchestrates
