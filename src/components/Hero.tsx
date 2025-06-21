@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { supabase } from '../lib/supabaseClient';
 import CheckIcon from './icons/CheckIcon';
 import XMarkIcon from './icons/XMarkIcon';
+import { ArrowRight, Play, Star, Users, Award, Clock } from 'lucide-react';
 
 const Hero = () => {
   const [email, setEmail] = useState('');
@@ -82,9 +83,9 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="flex items-center justify-center min-h-screen py-20 md:py-28 bg-dark-gray relative overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800"
     >
-      {/* 1. Ken Burns Background */}
+      {/* Background Ken Burns Effect */}
       <motion.div
         className="absolute inset-0 z-0"
         style={{ scale: 1.05 }}
@@ -96,83 +97,99 @@ const Hero = () => {
         <Image
           src="/Hero4HD.png"
           alt="Mobile mechanic working on an engine outdoors"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: 'cover' }}
           priority
         />
       </motion.div>
 
-      {/* 2. Dark Gradient Overlay */}
-      <div
-        className="absolute inset-0 z-10"
-        style={{ background: 'linear-gradient(to right, rgba(17,24,39,0.9) 0%, rgba(17,24,39,0.7) 50%, rgba(17,24,39,0.85) 100%)' }}
-      ></div>
+      {/* Subtle Gradient Overlay - Much more transparent to preserve image depth */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900/85 via-slate-800/80 to-slate-900/90"></div>
 
-      {/* 3. Main Content Container */}
-      <div className="container mx-auto px-6 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[70vh]">
+      {/* Background decorative elements - Reduced opacity */}
+      <div className="absolute inset-0 z-15 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%224%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-10"></div>
+
+      {/* Much more subtle gradient orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-gold/10 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/8 rounded-full filter blur-3xl opacity-15 animate-pulse delay-1000"></div>
+
+      {/* Main Content Container */}
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
           
           {/* Left Side - Content */}
           <motion.div
             className="flex flex-col items-start text-left lg:pr-8"
-            variants={centeredContentContainerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <motion.h1
-              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black mb-6 text-white leading-tight relative"
-              variants={itemVariants}
+            {/* Trust Badge */}
+            <motion.div
+              className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 mb-8 shadow-lg"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              style={{
+                boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2)'
+              }}
             >
-              {/* Enhanced background for better readability */}
-              <div className="absolute inset-0 bg-gradient-to-r from-dark-gray/80 via-dark-gray/60 to-transparent rounded-2xl blur-xl scale-110 -z-10"></div>
-              
-              {/* Main headline with enhanced styling */}
-              <div className="relative z-10 bg-gradient-to-r from-dark-gray/90 via-dark-gray/70 to-dark-gray/50 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
-                {headlineWords.map((word, i) => (
-                  <motion.span
-                    key={i}
-                    variants={wordVariants}
-                    custom={i}
-                    className={`inline-block mr-2 ${
-                      word === '#1' 
-                        ? 'text-accent-gold font-black subtle-glow' 
-                        : 'text-white font-black subtle-glow'
-                    }`}
-                    style={{ 
-                      textShadow: '0 0 10px rgba(173, 216, 230, 0.4), 0 0 20px rgba(255, 255, 255, 0.2), 0 2px 4px rgba(0, 0, 0, 0.6)'
-                    }}
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-              </div>
+              <Star className="w-4 h-4 text-accent-gold fill-current drop-shadow-sm" />
+              <span className="text-sm font-semibold text-white" style={{
+                textShadow: '0 0 10px rgba(255, 255, 255, 0.5)'
+              }}>Trusted by 500+ Repair Shops</span>
+            </motion.div>
+
+            {/* Main Heading */}
+            <motion.h1
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 tracking-tight leading-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              style={{
+                textShadow: '0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              <span className="block text-white drop-shadow-2xl" style={{
+                textShadow: '0 0 30px rgba(255, 255, 255, 0.8), 0 4px 8px rgba(0, 0, 0, 0.3)'
+              }}>Transform Your</span>
+              <span className="block bg-gradient-to-r from-yellow-300 via-accent-gold to-yellow-300 bg-clip-text text-transparent font-extrabold relative" style={{
+                filter: 'drop-shadow(0 0 20px rgba(255, 215, 0, 0.6)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))'
+              }}>
+                Repair Business
+              </span>
+              <span className="block text-3xl sm:text-4xl lg:text-5xl font-medium mt-2 text-gray-100 drop-shadow-lg" style={{
+                textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
+              }}>
+                with Smart CRM
+              </span>
             </motion.h1>
 
+            {/* Subtitle */}
             <motion.p
-              className="text-xl sm:text-2xl mb-8 text-white max-w-xl relative"
-              variants={itemVariants}
+              className="text-xl md:text-2xl max-w-2xl mb-8 leading-relaxed text-gray-100 font-medium"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              style={{
+                textShadow: '0 0 15px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3)'
+              }}
             >
-              {/* Background for better readability */}
-              <div className="absolute inset-0 bg-dark-gray/70 backdrop-blur-sm rounded-xl -z-10 scale-105"></div>
-              
-              {/* Enhanced paragraph text */}
-              <span className="relative z-10 block bg-dark-gray/60 backdrop-blur-md rounded-xl p-4 font-medium leading-relaxed subtle-glow" 
-                    style={{ textShadow: '0 0 8px rgba(173, 216, 230, 0.3), 0 0 15px rgba(255, 255, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.6)' }}>
-                {paragraphText}
-              </span>
+              Streamline your bookings, manage customer relationships, and boost your revenue with our all-in-one CRM designed specifically for small-engine repair shops.
             </motion.p>
 
-            <motion.div variants={itemVariants} className="w-full max-w-md">
-              <form
-                className="flex flex-col sm:flex-row gap-4"
-                onSubmit={handleSubmit}
-              >
+            {/* Email Capture Form */}
+            <motion.div
+              className="w-full max-w-lg mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
+            >
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
                 <input
                   type="email"
                   placeholder="Enter your business email"
-                  className="px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-accent-gold flex-grow text-gray-700 sm:min-w-[280px]"
-                  aria-label="Business email for quote request"
+                  className="flex-1 px-6 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-gray-400 focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-all duration-300 text-lg"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -180,28 +197,41 @@ const Hero = () => {
                 />
                 <button
                   type="submit"
-                  className="bg-accent-gold text-neutral-white px-6 py-3 rounded-lg font-semibold
-                             min-h-[48px] min-w-[180px] sm:min-w-auto flex items-center justify-center
-                             hover:bg-yellow-500 hover:shadow-lg hover:ring-2 hover:ring-yellow-300 hover:ring-opacity-50
-                             transition-all duration-200 whitespace-nowrap active:scale-95 transform disabled:opacity-50 shadow-md"
+                  className="bg-gradient-to-r from-accent-gold to-yellow-500 hover:from-yellow-500 hover:to-accent-gold text-black font-semibold px-8 py-4 rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 group min-w-[200px] flex items-center justify-center"
                   disabled={formStatus === 'submitting'}
                 >
                   <AnimatePresence mode="wait" initial={false}>
-                    {formStatus === 'idle' && <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Get an On-Site Quote</motion.span>}
-                    {formStatus === 'submitting' && <motion.span key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Getting Quote...</motion.span>}
+                    {formStatus === 'idle' && (
+                      <motion.div
+                        key="idle"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="flex items-center"
+                      >
+                        Get Free Quote
+                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </motion.div>
+                    )}
+                    {formStatus === 'submitting' && (
+                      <motion.span key="submitting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        Getting Quote...
+                      </motion.span>
+                    )}
                     {formStatus === 'success' && (
-                      <motion.div key="success" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center">
-                        <CheckIcon className="mr-2 text-neutral-white" /> Success!
+                      <motion.div key="success" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center">
+                        <CheckIcon className="mr-2 text-black" /> Success!
                       </motion.div>
                     )}
                     {formStatus === 'error' && (
-                      <motion.div key="error" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center">
-                        <XMarkIcon className="mr-2 text-neutral-white" /> Failed
+                      <motion.div key="error" initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center">
+                        <XMarkIcon className="mr-2 text-black" /> Try Again
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </button>
               </form>
+              
               {message && (
                 <motion.p
                   className={`mt-4 text-sm ${message.includes('Error:') || message.startsWith('Please enter') ? 'text-red-300' : 'text-green-300'}`}
@@ -212,28 +242,37 @@ const Hero = () => {
                   {message}
                 </motion.p>
               )}
-              {!message && (
-                <p className="text-sm text-gray-300 mt-4">
-                  Submit your email to start the quote process.
-                </p>
-              )}
             </motion.div>
+
+            {/* Secondary CTA */}
+            <motion.button
+              className="inline-flex items-center gap-2 text-white hover:text-accent-gold transition-colors duration-300 text-lg font-semibold group"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+              style={{
+                textShadow: '0 0 15px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2)'
+              }}
+            >
+              <Play className="w-5 h-5 group-hover:scale-110 transition-transform drop-shadow-sm" />
+              Watch 2-Minute Demo
+            </motion.button>
           </motion.div>
 
-          {/* Right Side - CRM Dashboard Image */}
+          {/* Right Side - CRM Dashboard Preview */}
           <motion.div
             className="flex items-center justify-center lg:justify-end relative"
             initial={{ opacity: 0, x: 50, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
+            transition={{ duration: 1.0, delay: 0.8 }}
           >
             <div className="relative max-w-lg w-full">
-              {/* Subtle glow effect behind the image */}
-              <div className="absolute inset-0 bg-accent-gold/20 rounded-xl blur-2xl scale-110 opacity-30"></div>
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-accent-gold/20 rounded-2xl blur-3xl scale-110 opacity-40"></div>
               
-              {/* Main CRM Dashboard Image */}
+              {/* Main Dashboard Image */}
               <motion.div
-                className="relative z-10 bg-white/10 backdrop-blur-sm rounded-xl p-4 shadow-2xl border border-white/20"
+                className="relative z-10 bg-white/10 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-white/20"
                 whileHover={{ scale: 1.02, y: -5 }}
                 transition={{ duration: 0.3 }}
               >
@@ -242,14 +281,14 @@ const Hero = () => {
                   alt="CRM Dashboard Preview"
                   width={600}
                   height={450}
-                  objectFit="contain"
-                  className="rounded-lg shadow-lg"
+                  style={{ objectFit: 'contain' }}
+                  className="rounded-xl shadow-lg"
                   priority
                 />
                 
-                {/* Floating badge */}
+                {/* Floating Live Demo Badge */}
                 <motion.div
-                  className="absolute -top-3 -right-3 bg-accent-gold text-dark-gray px-3 py-1 rounded-full text-sm font-semibold shadow-lg"
+                  className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-gold to-yellow-500 text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg"
                   initial={{ scale: 0, rotate: -15 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ delay: 1.5, duration: 0.5, type: "spring" }}
@@ -259,9 +298,53 @@ const Hero = () => {
               </motion.div>
             </div>
           </motion.div>
-
         </div>
+
+        {/* Stats Section */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-16 pt-16 border-t border-white/10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.4 }}
+        >
+          <div className="text-center group">
+            <div className="flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mx-auto mb-4 group-hover:bg-accent-gold/20 transition-colors duration-300">
+              <Users className="w-8 h-8 text-accent-gold" />
+            </div>
+            <div className="text-3xl md:text-4xl font-bold text-white mb-2" style={{
+              textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
+            }}>500+</div>
+            <div className="text-gray-200 font-medium" style={{
+              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+            }}>Active Repair Shops</div>
+          </div>
+          <div className="text-center group">
+            <div className="flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mx-auto mb-4 group-hover:bg-accent-gold/20 transition-colors duration-300">
+              <Clock className="w-8 h-8 text-accent-gold" />
+            </div>
+            <div className="text-3xl md:text-4xl font-bold text-white mb-2" style={{
+              textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
+            }}>24/7</div>
+            <div className="text-gray-200 font-medium" style={{
+              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+            }}>Expert Support</div>
+          </div>
+          <div className="text-center group">
+            <div className="flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mx-auto mb-4 group-hover:bg-accent-gold/20 transition-colors duration-300">
+              <Award className="w-8 h-8 text-accent-gold" />
+            </div>
+            <div className="text-3xl md:text-4xl font-bold text-white mb-2" style={{
+              textShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
+            }}>98%</div>
+            <div className="text-gray-200 font-medium" style={{
+              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+            }}>Customer Satisfaction</div>
+          </div>
+        </motion.div>
       </div>
+
+      {/* Bottom gradient fade - More subtle */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-800/60 to-transparent z-30"></div>
     </section>
   );
 };
