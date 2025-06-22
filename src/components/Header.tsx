@@ -44,7 +44,7 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-white/70 dark:bg-slate-900/70 shadow-sm backdrop-blur-sm border-b border-white/10">
-      <div className="container mx-auto px-4 sm:px-6 py-2.5 flex justify-between items-center">
+      <div className="container mx-auto px-4 sm:px-6 py-1.5 sm:py-2 flex justify-between items-center">
         {/* Logo Area */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -59,8 +59,9 @@ const Header = () => {
             <Image
               src="/assets/icons/royalty-repairNOBACKGROUND.svg"
               alt="Royalty Repair Logo"
-              width={130}
-              height={32}
+              width={80} // Reduced default width for mobile
+              height={28} // Adjusted height proportionally
+              className="sm:w-[100px] sm:h-[32px]" // Larger size for sm screens and up
               // className="rounded-full" // Removed as it's an SVG
             />
             <span className="text-lg md:text-xl font-semibold text-dark-gray sr-only"> {/* Added sr-only as logo text is in SVG */}
