@@ -1,7 +1,6 @@
 "use client";
-import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'; // Added useScroll, useTransform, useMotionTemplate
-import React, { useRef } from 'react'; // Added useRef
-import Image from 'next/image';
+import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'; 
+import React, { useRef } from 'react'; 
 
 const testimonialsData = [
   {
