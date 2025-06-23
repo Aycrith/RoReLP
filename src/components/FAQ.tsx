@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const faqData = [
   {
     question: "What types of small engines do you repair?",
-    answer: "We repair a wide range of small engines, including those in lawnmowers, snowblowers, generators, leaf blowers, pressure washers, chainsaws, tillers, and more. If it has a small engine and isn't working right, give us a call!"
+    answer: "We repair a wide range of small engines, including those in lawnmowers, string trimmers, generators, leaf blowers, pressure washers, chainsaws, tillers, and more. If it has a small engine and isn't working right, give us a call!"
   },
   {
     question: "What are your service hours for on-site repairs?",

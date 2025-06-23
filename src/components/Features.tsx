@@ -17,9 +17,9 @@ const featuresData = [
     description: "Keep your power on. We service and repair portable and standby generators to ensure reliability."
   },
   {
-    icon: "/assets/icons/snowblower-repair.svg", // Placeholder icon
-    title: "Snowblower Servicing",
-    description: "Get ready for winter. We provide full servicing and repair for snowblowers at your location."
+    icon: "/assets/icons/string-trimmer-repair.svg",
+    title: "String Trimmer Repair",
+    description: "Keep your yard looking sharp with our professional string trimmer repair services. We service all major brands and models."
   },
   {
     icon: "/assets/icons/pressure-washer-repair.svg", // Placeholder icon

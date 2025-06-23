@@ -31,7 +31,7 @@ const Hero = () => {
           >
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 99, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
             >
@@ -40,7 +40,7 @@ const Hero = () => {
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 99, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-xl text-gray-300 mb-8"
             >
