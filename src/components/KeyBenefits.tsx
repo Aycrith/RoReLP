@@ -18,11 +18,26 @@ interface BenefitDetailProps {
 const BenefitDetail: React.FC<BenefitDetailProps> = ({ title, description, imageUrl, imageAlt, textOrder = 'order-1', imageOrder = 'order-2' }) => {
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.6, 
+        ease: "easeOut" as const 
+      } 
+    }
   };
   const imageVariants = {
     hidden: { opacity: 0, scale: 0.85 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: "easeOut", delay: 0.15 } }
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      transition: { 
+        duration: 0.6, 
+        ease: "easeOut" as const, 
+        delay: 0.15 
+      } 
+    }
   };
 
   return (
@@ -59,7 +74,15 @@ const KeyBenefits = () => {
 
   const sectionTitleVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.1, ease: "easeOut" } }
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.6, 
+        delay: 0.1, 
+        ease: "easeOut" as const 
+      } 
+    }
   };
 
   const benefits = [
