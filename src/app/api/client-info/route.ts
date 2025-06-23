@@ -10,20 +10,33 @@ interface ClientInfoResponse {
   error?: string;
 }
 
+
 export async function GET(): Promise<NextResponse<ClientInfoResponse>> {
   try {
-    const headersList = headers();
+    // Get headers - in Next.js 13+, headers() returns a Promise<ReadonlyHeaders>
+    const headersList = await headers();
+    
+    // Get header values directly from the headers object
+    const getHeader = (key: string): string | null => {
+      try {
+        return headersList.get(key);
+      } catch (error) {
+        console.error('Error accessing headers:', error);
+        return null;
+      }
+    };
     
     // Get client IP from headers
-    const forwardedFor = headersList.get('x-forwarded-for');
-    const realIp = headersList.get('x-real-ip');
+    const forwardedFor = getHeader('x-forwarded-for');
+    const realIp = getHeader('x-real-ip');
     
+    // Safely handle the IP extraction
     const ip = (forwardedFor ? forwardedFor.split(',')[0].trim() : null) || 
               realIp ||
               (process.env.NODE_ENV === 'development' ? '127.0.0.1' : 'unknown');
     
     // Get user agent
-    const userAgent = headersList.get('user-agent');
+    const userAgent = getHeader('user-agent');
 
     return NextResponse.json({
       ip,
