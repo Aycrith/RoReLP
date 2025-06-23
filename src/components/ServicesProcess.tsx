@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import Image from 'next/image'; // Added Image import
 
 const processSteps = [
-  { step: 1, title: "Contact Us:", detail: "Briefly describe your issue and location.", moreInfo: "You can reach us by phone at (555) 123-4567 or email us at service@royaltyrepair.app." },
-  { step: 2, title: "Get an Estimate:", detail: "We&apos;ll provide an estimated time and cost.", moreInfo: "Our estimates are based on common repair times and our competitive hourly rate. Parts are billed separately if needed." },
-  { step: 3, title: "Schedule Service:", detail: "We arrange a convenient time to come to you.", moreInfo: "We aim for same-day or next-day service when possible and will work with your schedule." },
-  { step: 4, title: "Expert On-Site Repair:", detail: "Our technician performs the repair efficiently.", moreInfo: "We carry a wide range of common parts. If a special part needs ordering, we&apos;ll discuss options and timing with you." },
-  { step: 5, title: "Pay & Go:", detail: "Simple payment once the job is done to your satisfaction.", moreInfo: "We accept cash, checks, and major credit/debit cards on-site for your convenience." }
+  { step: 1, title: "Easy Booking:", detail: "Tell us about your equipment and the issue. Book online or call us.", moreInfo: "Use our simple online form or give us a call. We'll gather some basic information to understand your needs." },
+  { step: 2, title: "Transparent Quote:", detail: "Receive a clear, upfront estimate for your repair.", moreInfo: "We provide an estimate based on the information you provide, covering labor and anticipated parts. No hidden fees." },
+  { step: 3, title: "Convenient Scheduling:", detail: "Pick a time that works for you. We come to your location.", moreInfo: "Our team will coordinate a service appointment that fits your schedule. You can also manage your booking through our customer portal." },
+  { step: 4, title: "Expert On-Site Repair:", detail: "Our certified technician arrives, diagnoses, and repairs your equipment.", moreInfo: "Our mobile workshop is equipped for most repairs. You can track the status of your repair through our customer portal." },
+  { step: 5, title: "Review & Pay:", detail: "Confirm your satisfaction. Easy payment and service records online.", moreInfo: "Once the job is complete, review the work with our technician. Securely pay on-site or online. All service records are available in your customer portal." }
 ];
 
 const ServicesProcess = () => {
@@ -87,7 +87,7 @@ const ServicesProcess = () => {
           transition={{ duration: 0.6, delay: 0.15 }}
           viewport={{ once: true }}
         >
-          Our On-Site Service Advantage
+          Getting Your Equipment Repaired is Easy
         </motion.h2>
 
         <motion.div
@@ -98,54 +98,54 @@ const ServicesProcess = () => {
         >
           <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-12 mb-16"> {/* Changed to lg:grid-cols-2 for better image display */}
 
-            {/* Block 1: Direct To You Service */}
+            {/* Block 1: We Come To You */}
             <motion.div variants={imageContentBlockVariants} className="flex flex-col md:flex-row items-center gap-6 md:gap-8 text-center md:text-left">
               <motion.div className="md:w-2/5 flex-shrink-0" variants={imageVariants}>
                 <Image
                   src="/HeroMobileRepairUnit1.png"
-                  alt="Organized mobile repair van interior"
+                  alt="Royalty Repair mobile service unit arriving at a customer's location"
                   width={300}
                   height={225}
                   className="rounded-lg shadow-lg object-cover mx-auto"
                 />
               </motion.div>
               <motion.div className="md:w-3/5" variants={textVariants}>
-                <h3 className="text-2xl font-semibold text-primary-blue mb-3">Direct To You Service</h3>
+                <h3 className="text-2xl font-semibold text-primary-blue mb-3">1. We Come To You</h3>
                 <p className="text-gray-700 mb-4 text-lg">
-                  No more hauling your equipment to a shop! We provide expert small engine repairs right at your location, saving you time and hassle.
+                  Forget the hassle of transporting heavy or cumbersome equipment. Our certified technicians arrive at your home or business with a fully-equipped mobile workshop.
                 </p>
                 <p className="text-gray-700 text-lg">
-                  Serving the greater Springfield area.
+                  Prompt, professional, and ready to work.
                 </p>
               </motion.div>
             </motion.div>
 
-            {/* Block 2: Transparent Hourly Rates */}
-            <motion.div variants={imageContentBlockVariants} className="flex flex-col md:flex-row items-center gap-6 md:gap-8 text-center md:text-left md:flex-row-reverse"> {/* Added md:flex-row-reverse for variety */}
+            {/* Block 2: Expert Repair On-Site */}
+            <motion.div variants={imageContentBlockVariants} className="flex flex-col md:flex-row items-center gap-6 md:gap-8 text-center md:text-left md:flex-row-reverse">
               <motion.div className="md:w-2/5 flex-shrink-0" variants={imageVariants}>
                 <Image
-                  src="/HeroBluePrintEngine3.png"
-                  alt="Engine blueprint and carburetor"
+                  src="/HeroEngine2.png" // Consider a different, relevant image
+                  alt="Royalty Repair technician performing an expert repair on a small engine"
                   width={300}
                   height={225}
                   className="rounded-lg shadow-lg object-cover mx-auto"
                 />
               </motion.div>
               <motion.div className="md:w-3/5" variants={textVariants}>
-                <h3 className="text-2xl font-semibold text-primary-blue mb-3">Transparent Hourly Rates</h3>
+                <h3 className="text-2xl font-semibold text-primary-blue mb-3">2. Expert Repair, Your Control</h3>
                 <p className="text-gray-700 mb-4 text-lg">
-                  We believe in clear, upfront pricing. Our services are billed by the hour, and we&apos;re proud to offer rates that often beat traditional in-shop repair costs.
+                  Our technicians diagnose the issue and explain the required repairs clearly. With your approval, they get to work, aiming to fix it right the first time. Track progress and manage your service through our online customer portal.
                 </p>
                 <p className="text-gray-700 text-lg">
-                  Contact us for our current hourly rate and an estimate for your specific needs.
+                  Quality parts and transparent communication, always.
                 </p>
               </motion.div>
             </motion.div>
           </div>
 
-          {/* Process list block */}
+          {/* Process list block - Refined title */}
           <motion.div variants={contentBlockVariants} className="max-w-3xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-semibold text-dark-gray mb-8 text-center">Our Simple Process</h3>
+            <h3 className="text-2xl md:text-3xl font-semibold text-dark-gray mb-8 text-center">Your Hassle-Free Repair Journey</h3>
             <motion.div
               className="space-y-3"
               variants={processListContainerVariants}

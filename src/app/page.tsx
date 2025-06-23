@@ -9,7 +9,9 @@ import ExpansionOffer from "@/components/ExpansionOffer"; // New import
 import Features from "@/components/Features";
 import AboutUs from "@/components/AboutUs";
 import ServicesProcess from "@/components/ServicesProcess";
-import ServiceAreas from "@/components/ServiceAreas"; // New import
+import KeyBenefits from "@/components/KeyBenefits";
+import CrmSpotlight from "@/components/CrmSpotlight"; // Import the new CRM spotlight component
+import ServiceAreas from "@/components/ServiceAreas";
 import ProblemSolution from "@/components/ProblemSolution";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
@@ -51,7 +53,9 @@ export default function Home() {
             <Features />
             <AboutUs />
             <ServicesProcess />
-            <ServiceAreas /> {/* New component */}
+            <KeyBenefits />
+            <CrmSpotlight /> {/* Add the CRM Spotlight component to the page structure */}
+            <ServiceAreas />
             <ProblemSolution />
             <Testimonials />
             <FAQ />

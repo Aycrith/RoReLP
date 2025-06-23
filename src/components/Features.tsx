@@ -7,19 +7,34 @@ import InteractiveCard from './InteractiveCard';
 
 const featuresData = [
   {
-    icon: "/assets/icons/feature (1).svg",
-    title: "Effortless Invoicing",
-    description: "Create and send professional invoices in seconds. Track payments and send automated reminders."
+    icon: "/assets/icons/engine-repair.svg", // Placeholder icon
+    title: "Lawnmower Repair",
+    description: "Comprehensive on-site repair for all types of lawnmowers: push, riding, zero-turn, and robotic."
   },
   {
-    icon: "/assets/icons/feature.svg",
-    title: "Smart Scheduling",
-    description: "Manage appointments with an easy-to-use calendar. Avoid double bookings and keep your workflow smooth."
+    icon: "/assets/icons/generator-repair.svg", // Placeholder icon
+    title: "Generator Maintenance",
+    description: "Keep your power on. We service and repair portable and standby generators to ensure reliability."
   },
   {
-    icon: "/assets/icons/information (1).svg",
-    title: "Customer Central",
-    description: "Keep a complete history of every customer and every repair job in one organized place."
+    icon: "/assets/icons/snowblower-repair.svg", // Placeholder icon
+    title: "Snowblower Servicing",
+    description: "Get ready for winter. We provide full servicing and repair for snowblowers at your location."
+  },
+  {
+    icon: "/assets/icons/pressure-washer-repair.svg", // Placeholder icon
+    title: "Pressure Washer Repair",
+    description: "Restore cleaning power. On-site diagnostics and repair for various pressure washer models."
+  },
+  {
+    icon: "/assets/icons/small-engine-generic.svg", // Placeholder icon
+    title: "Other Small Engines",
+    description: "Tillers, leaf blowers, chainsaws, and more. If it has a small engine, we can likely fix it!"
+  },
+  {
+    icon: "/assets/icons/crm-icon.svg", // Placeholder icon for CRM
+    title: "Easy Service Management",
+    description: "Track your appointments, view service history, and manage your repairs online with our Customer Portal."
   }
 ];
 
@@ -93,11 +108,11 @@ const Features = () => {
           variants={sectionTitleVariants}
           initial="hidden" whileInView="visible" viewport={{ once: true }}
         >
-          Everything you need, nothing you don&apos;t
+          Comprehensive On-Site Repair Services
         </motion.h2>
 
         <motion.div
-          className="grid md:grid-cols-3 gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" // Adjusted grid for better display of 6 items
           variants={gridContainerVariants}
           initial="hidden" whileInView="visible" viewport={{ once: true }}
         >
