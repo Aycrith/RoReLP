@@ -56,14 +56,17 @@ const Header = () => {
           // or use variant groups, but this should be acceptable for a simple effect.
         >
           <Link href="/" className="flex items-center space-x-2">
-            <Image
-              src="/assets/icons/royalty-repairNOBACKGROUND.svg"
-              alt="Royalty Repair Logo"
-              width={80} // Reduced default width for mobile
-              height={28} // Adjusted height proportionally
-              className="sm:w-[100px] sm:h-[32px]" // Larger size for sm screens and up
-              // className="rounded-full" // Removed as it's an SVG
-            />
+            <div className="w-[120px] sm:w-[140px] h-auto">
+              <Image
+                src="/assets/icons/royalty-repairNOBACKGROUND.svg"
+                alt="Royalty Repair Logo"
+                width={0}
+                height={0}
+                sizes="100vw"
+                className="w-full h-auto object-contain"
+                priority
+              />
+            </div>
             <span className="text-lg md:text-xl font-semibold text-dark-gray sr-only"> {/* Added sr-only as logo text is in SVG */}
             Royalty Repair
           </span>

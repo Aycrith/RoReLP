@@ -1,0 +1,436 @@
+"use client";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '../lib/supabaseClient';
+import ExpansionMapSnippet from './backgrounds/ExpansionMapSnippet';
+import { CheckCircle, XCircle, AlertCircle, Loader2 } from 'lucide-react';
+
+interface FormData {
+  full_name: string;
+  email: string;
+  postal_code: string;
+  phone?: string;
+  preferred_contact?: 'email' | 'phone' | 'either';
+  source?: string;
+  ip_address?: string;
+  user_agent?: string;
+  metadata?: Record<string, any>;
+}
+
+const ExpansionOffer = () => {
+  const [formData, setFormData] = useState<FormData>({
+    full_name: '',
+    email: '',
+    postal_code: '',
+    phone: '',
+    preferred_contact: 'email',
+    source: 'expansion_offer',
+  });
+  
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState({ text: '', type: '' });
+  const [clientInfo, setClientInfo] = useState({
+    ip: '',
+    userAgent: '',
+    timestamp: '',
+  });
+
+  // Get client info on component mount
+  useEffect(() => {
+    const getClientInfo = async () => {
+      try {
+        const response = await fetch('/api/client-info');
+        const data = await response.json();
+        setClientInfo({
+          ip: data.ip || '',
+          userAgent: navigator.userAgent,
+          timestamp: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error('Error fetching client info:', error);
+      }
+    };
+
+    getClientInfo();
+  }, []);
+
+  const validateForm = (): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+    
+    if (!formData.full_name.trim()) {
+      errors.push('Full name is required');
+    }
+    
+    if (!formData.email) {
+      errors.push('Email is required');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.push('Please enter a valid email address');
+    }
+    
+    if (!formData.postal_code) {
+      errors.push('ZIP code is required');
+    } else if (!/^[3][2-4]\d{3}$/.test(formData.postal_code)) {
+      errors.push('Please enter a valid Florida ZIP code (32xxx, 33xxx, or 34xxx)');
+    }
+    
+    if (formData.phone && !/^\+?[\d\s-]{10,}$/.test(formData.phone)) {
+      errors.push('Please enter a valid phone number or leave it blank');
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate form
+    const { isValid, errors } = validateForm();
+    if (!isValid) {
+      setMessage({
+        text: errors.join('. ') + '.',
+        type: 'error'
+      });
+      return;
+    }
+
+    setFormStatus('submitting');
+    setMessage({ text: '', type: '' });
+
+    try {
+      const submissionData = {
+        ...formData,
+        ip_address: clientInfo.ip,
+        user_agent: clientInfo.userAgent,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        status: 'new_lead',
+        metadata: {
+          source: 'expansion_offer',
+          campaign: 'florida_expansion_2025',
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+          referrer: document.referrer || 'direct',
+          utm_params: getUtmParams(),
+        },
+      };
+
+      console.log('Submitting expansion form data:', submissionData);
+      
+      const { data, error } = await supabase
+        .from('customers')
+        .insert([submissionData])
+        .select();
+      
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(
+          error.message.includes('unique constraint') && error.message.includes('email')
+            ? 'This email is already registered. We look forward to serving you in the new areas!'
+            : error.message.includes('check constraint') && error.message.includes('postal_code')
+            ? 'The provided ZIP code is not in our upcoming service expansion area.'
+            : 'Failed to submit the form. Please try again.'
+        );
+      }
+      
+      console.log('Expansion form submitted successfully:', data);
+      
+      // Reset form
+      setFormData({
+        full_name: '',
+        email: '',
+        postal_code: '',
+        phone: '',
+        preferred_contact: 'email',
+        source: 'expansion_offer',
+      });
+      
+      setFormStatus('success');
+      setMessage({
+        text: 'Thank you! Your offer is claimed. We will contact you with service details for your area soon!',
+        type: 'success'
+      });
+      
+      // Track conversion
+      if (window.gtag) {
+        window.gtag('event', 'conversion', {
+          'send_to': 'AW-YOUR-CONVERSION-ID/EXP123',
+          'value': 1.0,
+          'currency': 'USD',
+          'transaction_id': `exp_${Date.now()}`
+        });
+      }
+      
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      console.error('Error in expansion form submission:', {
+        error,
+        formData,
+        timestamp: new Date().toISOString()
+      });
+      
+      setFormStatus('error');
+      setMessage({
+        text: errorMessage,
+        type: 'error'
+      });
+      
+    } finally {
+      // Reset form status after 5 seconds if not submitting
+      if (formStatus !== 'submitting') {
+        setTimeout(() => {
+          setFormStatus('idle');
+          setMessage({ text: '', type: '' });
+        }, 5000);
+      }
+    }
+  };
+
+  // Helper function to get UTM parameters from URL
+  const getUtmParams = () => {
+    if (typeof window === 'undefined') return {};
+    
+    const params = new URLSearchParams(window.location.search);
+    const utmParams: Record<string, string> = {};
+    
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+      const value = params.get(param);
+      if (value) utmParams[param] = value;
+    });
+    
+    return utmParams;
+  };
+
+  return (
+    <motion.section
+      id="expansion-offer"
+      className="py-16 md:py-20 bg-primary-blue/10"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+      viewport={{ once: true }}
+    >
+      <div className="container mx-auto px-4">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-dark-gray mb-5 leading-tight">
+              Great News! We&apos;re Expanding!
+            </h2>
+            <p className="text-xl text-primary-blue font-semibold mb-4">
+              Now Serving Clearwater, Largo & St. Petersburg!
+            </p>
+            <p className="text-gray-700 mb-6 text-lg">
+              Be among the first to experience Royalty Repair&apos;s convenient on-site service in your area! Sign up now to lock in an exclusive <strong className="text-accent-gold">20% Off Your First Repair</strong> and get priority booking when we officially launch in your neighborhood.
+            </p>
+            <ul className="space-y-2 text-gray-700 mb-6 text-lg">
+              <li className="flex items-center">
+                <CheckCircle className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
+                <span>Exclusive Launch Discount (20% Off!)</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
+                <span>Priority Service Booking</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
+                <span>The Same Great On-Site Expertise</span>
+              </li>
+            </ul>
+            <div className="mt-8">
+              <ExpansionMapSnippet />
+            </div>
+            <p className="text-sm text-gray-500 mt-8">
+              Don&apos;t miss out – secure your spot and discount today!
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl border border-gray-100"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-2xl font-semibold text-dark-gray mb-6 text-center">
+              Claim Your Launch Offer!
+            </h3>
+            
+            {/* Message Alert */}
+            <AnimatePresence>
+              {message.text && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className={`mb-6 p-4 rounded-lg flex items-start ${
+                    message.type === 'error' 
+                      ? 'bg-red-50 text-red-700 border border-red-200'
+                      : 'bg-green-50 text-green-700 border border-green-200'
+                  }`}
+                >
+                  {message.type === 'error' ? (
+                    <AlertCircle className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" />
+                  ) : (
+                    <CheckCircle className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" />
+                  )}
+                  <span>{message.text}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <form onSubmit={handleSubmit} className="space-y-5" id="expansion-form">
+              <div>
+                <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="full_name"
+                  name="full_name"
+                  value={formData.full_name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-colors"
+                  placeholder="Your Full Name"
+                  disabled={formStatus === 'submitting'}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-colors"
+                  placeholder="you@example.com"
+                  disabled={formStatus === 'submitting'}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone Number (Optional)
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-colors"
+                  placeholder="(555) 123-4567"
+                  disabled={formStatus === 'submitting'}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="preferred_contact" className="block text-sm font-medium text-gray-700 mb-1">
+                  Preferred Contact Method
+                </label>
+                <select
+                  id="preferred_contact"
+                  name="preferred_contact"
+                  value={formData.preferred_contact}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-colors bg-white"
+                  disabled={formStatus === 'submitting'}
+                >
+                  <option value="email">Email</option>
+                  <option value="phone">Phone</option>
+                  <option value="either">Either is fine</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="postal_code" className="block text-sm font-medium text-gray-700 mb-1">
+                  ZIP Code <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="postal_code"
+                    name="postal_code"
+                    value={formData.postal_code}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-colors"
+                    placeholder="e.g., 33701, 33770, 33755"
+                    disabled={formStatus === 'submitting'}
+                    pattern="[0-9]{5}"
+                    title="Enter a 5-digit Florida ZIP code (32xxx, 33xxx, or 34xxx)"
+                    required
+                  />
+                  {formData.postal_code && !/^[3][2-4]\d{3}$/.test(formData.postal_code) && (
+                    <p className="mt-1 text-sm text-red-600">Please enter a valid Florida ZIP code</p>
+                  )}
+                </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  Currently serving Clearwater, Largo, and St. Petersburg areas
+                </p>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={formStatus === 'submitting' || formStatus === 'success'}
+                  className={`w-full flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200 min-h-[52px] items-center ${
+                    formStatus === 'submitting' || formStatus === 'success'
+                      ? 'bg-yellow-400 cursor-not-allowed'
+                      : 'bg-accent-gold hover:bg-yellow-500 active:scale-95 transform'
+                  }`}
+                >
+                  {formStatus === 'submitting' ? (
+                    <>
+                      <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
+                      Processing...
+                    </>
+                  ) : formStatus === 'success' ? (
+                    <>
+                      <CheckCircle className="w-5 h-5 mr-2" />
+                      Offer Claimed!
+                    </>
+                  ) : formStatus === 'error' ? (
+                    <>
+                      <XCircle className="w-5 h-5 mr-2" />
+                      Try Again
+                    </>
+                  ) : (
+                    'Claim My 20% Discount!'
+                  )}
+                </button>
+              </div>
+              
+              <p className="text-xs text-gray-500 mt-4 text-center">
+                By submitting this form, you agree to our{' '}
+                <a href="/privacy" className="text-accent-gold hover:underline">Privacy Policy</a> and{' '}
+                <a href="/terms" className="text-accent-gold hover:underline">Terms of Service</a>.
+              </p>
+            </form>
+          </motion.div>
+        </div>
+      </div>
+    </motion.section>
+  );
+};
+
+export default ExpansionOffer;

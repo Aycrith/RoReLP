@@ -1,15 +1,52 @@
 "use client";
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
-import { Star, ArrowRight, Play, Users, Clock, Award } from 'lucide-react';
-import Image from 'next/image';
+
+// Rate limiting configuration
+const RATE_LIMIT_DURATION = 60 * 1000; // 1 minute
+const MAX_SUBMISSIONS = 3; // Max submissions per minute
+
+// Form field validation patterns
+const VALIDATION_PATTERNS = {
+  name: /^[a-zA-Z\s-]{2,50}$/,
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  phone: /^\+?[\d\s-]{10,20}$/,
+  shopName: /^[a-zA-Z0-9\s-]{0,100}$/
+};
+
+// Error messages
+const ERROR_MESSAGES = {
+  name: 'Please enter a valid name (2-50 characters, letters and spaces only)',
+  email: 'Please enter a valid email address',
+  phone: 'Please enter a valid phone number (10-20 digits)',
+  shopName: 'Shop name can only contain letters, numbers, and hyphens',
+  rateLimit: 'Too many submissions. Please try again later.',
+  generic: 'An error occurred. Please try again.'
+};
 
 interface FormData {
   name: string;
   email: string;
   phone: string;
   shopName: string;
+  source?: string;
+  ip_address?: string;
+  user_agent?: string;
+}
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  shopName?: string;
+  form?: string;
+}
+
+interface SubmissionAttempt {
+  timestamp: number;
+  ip: string;
 }
 
 const Hero = () => {
@@ -17,305 +54,483 @@ const Hero = () => {
     name: '',
     email: '',
     phone: '',
-    shopName: ''
+    shopName: '',
+    source: 'website_hero',
+    ip_address: '',
+    user_agent: ''
   });
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [message, setMessage] = useState({ text: '', type: '' });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [clientInfo, setClientInfo] = useState({ ip: '', userAgent: '' });
+  const [submissionAttempts, setSubmissionAttempts] = useState<SubmissionAttempt[]>([]);
+  const [isRateLimited, setIsRateLimited] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const lastSubmissionTime = useRef<number>(0);
+
+  // Refs for parallax
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start']
+  });
+
+  // Parallax effects
+  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  // Animation variants removed as they were unused
+
+  // Removed unused pulseAnimation
+
+  // Get client info on component mount
+  useEffect(() => {
+    const getClientInfo = async () => {
+      try {
+        const response = await fetch('/api/client-info', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch client info');
+        }
+        
+        const data = await response.json();
+        setClientInfo({
+          ip: data.ip || '',
+          userAgent: data.userAgent || ''
+        });
+      } catch (error) {
+        console.error('Error fetching client info:', error);
+        // Don't block form submission if client info fails
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getClientInfo();
+    
+    // Cleanup function
+    return () => {
+      // Any cleanup if needed
+    };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    
+    // Clear any existing error for this field
+    if (formErrors[name as keyof FormErrors]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // Basic validation
-    if (!formData.email) {
-      setMessage('Please enter your email.');
-      setIsLoading(false);
-      return;
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setMessage('Please enter a valid email address.');
-      setIsLoading(false);
-      return;
+  const validateField = (field: keyof FormData, value: string): string | undefined => {
+    if (!value.trim()) {
+      if (field === 'shopName') return undefined; // Optional field
+      return `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
     }
     
-    try {
-      const { error } = await supabase
-        .from('leads')
-        .insert([{ 
-          ...formData, 
-          shop_name: formData.shopName,
-          created_at: new Date() 
-        }]);
-      
-      if (error) throw error;
-      
-      setMessage('Thank you! We\'ll be in touch soon.');
-      setFormData({ name: '', email: '', phone: '', shopName: '' });
-    } catch (error) {
-      setMessage('Something went wrong. Please try again.');
-      console.error('Error submitting form:', error);
-    } finally {
-      setIsLoading(false);
+    if (field === 'email' && !VALIDATION_PATTERNS.email.test(value)) {
+      return ERROR_MESSAGES.email;
     }
-  };
-
-  const centeredContentContainerVariants = {
-    hidden: { opacity: 9 },
-    visible: {
-      opacity: 9,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 9, y: 30 },
-    visible: { 
-      opacity: 9, 
-      y: 30, 
-      transition: { 
-        duration: 0.5, 
-        ease: "easeOut" as const 
-      } 
+    
+    if (field === 'phone' && !VALIDATION_PATTERNS.phone.test(value)) {
+      return ERROR_MESSAGES.phone;
     }
+    
+    if (field === 'name' && !VALIDATION_PATTERNS.name.test(value)) {
+      return ERROR_MESSAGES.name;
+    }
+    
+    if (field === 'shopName' && value && !VALIDATION_PATTERNS.shopName.test(value)) {
+      return ERROR_MESSAGES.shopName;
+    }
+    
+    return undefined;
   };
 
-  const benefits = [
-    { 
-      icon: <Users className="w-6 h-6  text-yellow-400 [0_0_4px_rgba(250,204,21,1.5)]" />, 
-      text: "95% Open Rates" 
+  const validateForm = (): boolean => {
+    const errors: FormErrors = {};
+    let isValid = true;
+    
+    // Define the fields that should be validated
+    const fieldsToValidate = ['name', 'email', 'phone', 'shopName'] as const;
+    
+    // Validate each field
+    for (const key of fieldsToValidate) {
+      const value = formData[key];
+      if (value !== undefined) {
+        const error = validateField(key, value);
+        if (error) {
+          errors[key] = error;
+          isValid = false;
+        }
+      }
+    }
+    
+    setFormErrors(errors);
+    return isValid;
+  };
+
+  const checkRateLimit = (ip: string): boolean => {
+    const now = Date.now();
+    const timeWindow = now - RATE_LIMIT_DURATION;
+    
+    // Filter out old attempts
+    const recentAttempts = submissionAttempts.filter(
+      attempt => attempt.timestamp > timeWindow && attempt.ip === ip
+    );
+    
+    return recentAttempts.length >= MAX_SUBMISSIONS;
+  };
+
+  // Form fields configuration
+  const formFields = [
+    {
+      id: 'name',
+      label: 'FULL NAME',
+      type: 'text' as const,
+      required: true,
+      placeholder: 'John Doe',
+      pattern: VALIDATION_PATTERNS.name.source,
+      autoComplete: 'name',
+      icon: null
     },
-    { 
-      icon: <Clock className="w-6 h-6 text-yellow-400 [0_0_4px_rgba(250,204,21,1.5)]" />, 
-      text: "15 Min Setup" 
+    {
+      id: 'email',
+      label: 'EMAIL',
+      type: 'email' as const,
+      required: true,
+      placeholder: 'you@example.com',
+      pattern: VALIDATION_PATTERNS.email.source,
+      autoComplete: 'email',
+      icon: null
     },
-    { 
-      icon: <Award className="w-6 h-6 text-yellow-400 [0_0_4px_rgba(250,204,21,1.5)]" />, 
-      text: "Guaranteed Results" 
+    {
+      id: 'phone',
+      label: 'PHONE NUMBER',
+      type: 'tel' as const,
+      required: true,
+      placeholder: '(123) 456-7890',
+      pattern: VALIDATION_PATTERNS.phone.source,
+      autoComplete: 'tel',
+      icon: null
     },
+    {
+      id: 'shopName',
+      label: 'SHOP NAME (OPTIONAL)',
+      type: 'text' as const,
+      required: false,
+      placeholder: 'ABC Auto Repair',
+      pattern: VALIDATION_PATTERNS.shopName.source,
+      autoComplete: 'organization',
+      icon: null
+    }
   ];
 
-  return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex flex-col overflow-hidden bg-slate-900 isolate"
-    >
-      {/* Optimized Background with better layering */}
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src="/Hero4HD.png"
-          alt="Mobile mechanic working on an engine outdoors"
-          fill
-          sizes="100vw"
-          priority
-          className="object-cover w-full h-full"
-          style={{
-            objectPosition: 'center 30%',
-          }}
-          quality={100}
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/85 to-slate-900/95"></div>
-      </div>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Clear previous messages
+    setMessage({ text: '', type: '' });
+    
+    // Validate form
+    if (!validateForm()) {
+      // Focus on first error field
+      const firstError = Object.keys(formErrors)[0] as keyof FormErrors;
+      if (firstError && formRef.current) {
+        const errorElement = formRef.current.querySelector(`[name="${firstError}"]`) as HTMLElement;
+        if (errorElement) {
+          errorElement.focus();
+        }
+      }
+      return;
+    }
+    
+    // Check rate limiting
+    if (clientInfo.ip && checkRateLimit(clientInfo.ip)) {
+      setIsRateLimited(true);
+      setMessage({
+        text: ERROR_MESSAGES.rateLimit,
+        type: 'error'
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Update submission attempts
+      const now = Date.now();
+      setSubmissionAttempts(prev => [
+        ...prev,
+        { timestamp: now, ip: clientInfo.ip }
+      ]);
+      lastSubmissionTime.current = now;
+      
+      // Prepare submission data
+      const submissionData = {
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+        shop_name: formData.shopName.trim(),
+        source: formData.source,
+        ip_address: clientInfo.ip,
+        user_agent: clientInfo.userAgent,
+        created_at: new Date().toISOString(),
+        status: 'new',
+        notes: 'Submitted from website hero section'
+      };
+      
+      // Submit to Supabase
+      const { error } = await supabase
+        .from('leads')
+        .insert([submissionData]);
+      
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(error.details || error.message || 'Failed to submit form');
+      }
+      
+      // Success
+      setMessage({ 
+        text: 'Thank you! We\'ll be in touch soon!', 
+        type: 'success' 
+      });
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        shopName: '',
+        source: 'website_hero',
+      });
+      
+      // Reset form errors
+      setFormErrors({});
+      
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      console.error('Form submission error:', error);
+      
+      setMessage({ 
+        text: errorMessage.includes('duplicate key value') 
+          ? 'This email has already been submitted. We\'ll be in touch soon!'
+          : ERROR_MESSAGES.generic, 
+        type: 'error' 
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-      {/* Main Content with improved stacking context */}
-      <div className="relative z-10 flex-1 flex flex-col">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col relative z-20">
-          <motion.div 
-            className="flex-1 flex flex-col justify-center py-24 md:py-32"
-            initial="hidden"
-            animate="visible"
-            variants={centeredContentContainerVariants}
-          >
-            {/* Hero Content */}
-            <motion.div 
-              className="max-w-4xl mx-auto text-center mb-12"
-              variants={itemVariants}
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+      </div>
+    );
+  }
+
+  return (
+    <section 
+      ref={containerRef}
+      className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 text-white py-20 md:py-32 px-4 sm:px-6 lg:px-8"
+    >
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+          {/* Left Column - Content */}
+          <div className="mb-12 lg:mb-0">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-2xl"
             >
-              <motion.div 
-                className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2.5 mb-8 shadow-lg"
-                initial={{ opacity: 99, y: 20 }}
-                animate={{ opacity: 99, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <Star className="w-5 h-5 text-yellow-400 drop-shadow-[0_0_4px_rgba(250,204,21,0.5)]" />
-                <span className="text-sm font-semibold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">Trusted by 500+ Repair Shops</span>
-              </motion.div>
-              
               <motion.h1 
-                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white/90 mb-6 leading-tight"
-                style={{ 
-                  textShadow: '0 1px 4px rgba(0, 0, 0, 0.8), 0 2px 12px rgba(0, 0, 0, 0.6), 0 4px 24px rgba(0, 0, 0, 0.4)',
-                  WebkitTextStroke: '1px rgba(255, 255, 255, 0.3)',
-                  filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.24))',
-                  color: 'rgba(255, 255, 255, 0.98)'
-                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.6 }}
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
               >
-                The #1 CRM for Small-Engine Repair Shops
+                Boost Your Auto Repair Shop&apos;s Revenue
               </motion.h1>
               
               <motion.p 
-                className="text-2xl text-white/90 mb-10 max-w-2xl mx-auto font-medium relative z-10 px-6 py-4 rounded-lg"
-                style={{ 
-                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.9), 0 2px 8px rgba(0, 0, 0, 0.7)',
-                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                  backdropFilter: 'blur(8px)',
-                  lineHeight: '1.6',
-                  color: 'rgba(255, 255, 255, 0.98)'
-                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="text-xl text-gray-300 mb-8"
               >
-                Streamline your bookings, manage customer relationships, and boost your revenue with our all-in-one CRM.
+                Get more customers and increase your shop&apos;s visibility with our proven digital marketing strategies.
               </motion.p>
               
               <motion.div 
-                className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
-                variants={itemVariants}
-              >
-                <button 
-                  className="px-8 py-4 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:shadow-yellow-500/20 hover:scale-[1.02]"
-                  style={{
-                    boxShadow: '0 4px 14px -2px rgba(250, 204, 21, 0.3)',
-                  }}
-                >
-                  Get Started Free
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-                <button 
-                  className="px-8 py-4 bg-white/5 backdrop-blur-sm border-2 border-white/30 hover:border-white/50 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:bg-white/10 hover:shadow-lg hover:shadow-white/10"
-                  style={{
-                    backdropFilter: 'blur(12px)',
-                  }}
-                >
-                  <Play className="w-5 h-5" />
-                  Watch Demo
-                </button>
-              </motion.div>
-              
-              {/* Benefits Grid */}
-              <motion.div 
-                className="grid grid-cols-1  sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-16"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.5 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="flex flex-col sm:flex-row gap-4 mb-12"
               >
-                {benefits.map((benefit, index) => (
-                  <div key={index} className="bg-white/77 border border-white/88 rounded-xl p-6 hover:bg-white/76 transition-all duration-300 hover:border-white/76 hover:-translate-y-1">
-                    <div className="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center mb-4 mx-auto">
-                      {benefit.icon}
-                    </div>
-                    <p className="text-white font-semibold text-center">{benefit.text}</p>
-                  </div>
-                ))}
+                <a
+                  href="#contact"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-4 px-8 rounded-lg transition-colors duration-300 text-center"
+                >
+                  Get Started
+                </a>
+                <a
+                  href="#how-it-works"
+                  className="bg-transparent hover:bg-gray-800 border-2 border-white text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-300 text-center"
+                >
+                  Learn More
+                </a>
               </motion.div>
               
-              {/* Contact Form */}
               <motion.div 
-                className="bg-slate-800/95 border border-white/10 rounded-2xl p-8 max-w-2xl mx-auto shadow-xl"
-                initial={{ opacity: 99, y: 30 }}
-                animate={{ opacity: 99, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.5 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                className="flex items-center space-x-4 text-sm text-gray-400"
               >
-                <h3 
-                  className="text-2xl font-bold text-white/90 mb-6 text-center"
-                  style={{
-                    textShadow: '0 1px 4px rgb(255, 255, 255)',
-                  }}
-                >
-                  Schedule a Free Consultation
-                </h3>
-                
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-4 w-full">
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Your Name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-6 py-3 text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-white/90 text-gray-800 placeholder-gray-500 transition-all duration-300"
-                      required
-                    />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Your Email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-6 py-3 text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-white/90 text-gray-800 placeholder-gray-500 transition-all duration-300"
-                      required
-                    />
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="Your Phone Number"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-6 py-3 text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-white/90 text-gray-800 placeholder-gray-500 transition-all duration-300"
-                      required
-                    />
-                    <input
-                      type="text"
-                      name="shopName"
-                      placeholder="Shop Name (Optional)"
-                      value={formData.shopName}
-                      onChange={handleChange}
-                      className="w-full px-6 py-3 text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent-gold focus:border-transparent bg-white/90 text-gray-800 placeholder-gray-500 transition-all duration-300"
-                    />
+                <div className="flex -space-x-2">
+                  {[1, 2, 3].map((i) => (
+                    <div 
+                      key={i}
+                      className="h-8 w-8 rounded-full bg-gray-700 border-2 border-gray-900"
+                    ></div>
+                  ))}
+                </div>
+                <div>
+                  <p>Trusted by 500+ auto shops</p>
+                  <div className="flex items-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg
+                        key={star}
+                        className="w-4 h-4 text-yellow-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                    <span className="ml-1">5.0 (200+ reviews)</span>
                   </div>
-                  
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full flex items-center justify-center gap-3 px-8 py-3 text-lg font-semibold text-white rounded-lg transition-all duration-300 transform hover:scale-[1.02] bg-gradient-to-r from-accent-gold to-yellow-500 hover:from-yellow-500 hover:to-accent-gold shadow-lg"
-                  >
-                    {isLoading ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        Get Started
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                      </>
-                    )}
-                  </button>
-                  
-                  {message && (
-                    <motion.p 
-                      className={`text-center mt-4 p-3 rounded-lg ${
-                        message.includes('Thank you') 
-                          ? 'bg-green-500/20 text-green-300' 
-                          : 'bg-red-500/20 text-red-300'
-                      }`}
-                      initial={{ opacity: 99, y: 10 }}
-                      animate={{ opacity: 99, y: 0 }}
-                    >
-                      {message}
-                    </motion.p>
-                  )}
-                </form>
+                </div>
               </motion.div>
             </motion.div>
+          </div>
+          
+          {/* Right Column - Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-gray-800 rounded-2xl p-6 shadow-2xl border border-gray-700"
+          >
+            <h2 className="text-2xl font-bold mb-6 text-center">Get Your Free Consultation</h2>
+            
+            {message.text && (
+              <div className={`p-4 mb-6 rounded-lg ${
+                message.type === 'error' 
+                  ? 'bg-red-900/30 border border-red-700 text-red-200' 
+                  : 'bg-green-900/30 border border-green-700 text-green-200'
+              }`}>
+                {message.text}
+              </div>
+            )}
+            
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+              {formFields.map((field) => (
+                <div key={field.id} className="space-y-1">
+                  <label 
+                    htmlFor={field.id}
+                    className="block text-sm font-medium text-gray-300"
+                  >
+                    {field.label}{field.required && ' *'}
+                  </label>
+                  <div className="relative">
+                    <input
+                      id={field.id}
+                      name={field.id}
+                      type={field.type}
+                      required={field.required}
+                      placeholder={field.placeholder}
+                      value={formData[field.id as keyof FormData] as string}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-3 bg-gray-900 border ${
+                        formErrors[field.id as keyof FormErrors] 
+                          ? 'border-red-500' 
+                          : 'border-gray-700'
+                      } rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition-colors`}
+                      disabled={isSubmitting}
+                      aria-invalid={!!formErrors[field.id as keyof FormErrors]}
+                      aria-describedby={`${field.id}-error`}
+                    />
+                  </div>
+                  {formErrors[field.id as keyof FormErrors] && (
+                    <p 
+                      id={`${field.id}-error`}
+                      className="mt-1 text-sm text-red-400"
+                    >
+                      {formErrors[field.id as keyof FormErrors]}
+                    </p>
+                  )}
+                </div>
+              ))}
+              
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting || isRateLimited}
+                  className={`w-full flex justify-center items-center py-4 px-6 rounded-lg font-semibold text-gray-900 ${
+                    isSubmitting || isRateLimited
+                      ? 'bg-yellow-600 cursor-not-allowed'
+                      : 'bg-yellow-500 hover:bg-yellow-400'
+                  } transition-colors duration-300`}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                      Submitting...
+                    </>
+                  ) : (
+                    'Get Free Consultation'
+                  )}
+                </button>
+              </div>
+              
+              <p className="text-xs text-gray-400 text-center mt-4">
+                We respect your privacy. Unsubscribe at any time.
+              </p>
+            </form>
           </motion.div>
         </div>
       </div>
-
-      {/* Enhanced bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-slate-900 via-slate-900/90 to-transparent z-5"></div>
+      
+      {/* Background elements */}
+      <motion.div 
+        className="absolute inset-0 z-0 opacity-20"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 25% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 40%)',
+          y: yBg
+        }}
+      />
+      
+      <div className="absolute inset-0 bg-grid-white/[0.05] [mask-image:linear-gradient(0deg,transparent,black)]" />
     </section>
   );
 };
