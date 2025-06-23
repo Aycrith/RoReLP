@@ -15,8 +15,11 @@ export async function GET(): Promise<NextResponse<ClientInfoResponse>> {
     const headersList = headers();
     
     // Get client IP from headers
-    const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-              headersList.get('x-real-ip') ||
+    const forwardedFor = headersList.get('x-forwarded-for');
+    const realIp = headersList.get('x-real-ip');
+    
+    const ip = (forwardedFor ? forwardedFor.split(',')[0].trim() : null) || 
+              realIp ||
               (process.env.NODE_ENV === 'development' ? '127.0.0.1' : 'unknown');
     
     // Get user agent
