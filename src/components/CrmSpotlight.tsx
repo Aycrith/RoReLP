@@ -40,12 +40,28 @@ const CrmSpotlight = () => {
 
   const sectionTitleVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.6, 
+        ease: "easeOut" as const
+      } 
+    }
   };
 
   const imageVariants = {
     hidden: { opacity: 0, scale: 0.9, rotate: -5 },
-    visible: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.7, delay: 0.2, ease: "easeOut" } }
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      rotate: 0, 
+      transition: { 
+        duration: 0.7, 
+        delay: 0.2, 
+        ease: "easeOut" as const
+      } 
+    }
   };
 
 
