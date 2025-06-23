@@ -17,7 +17,7 @@ const Hero = () => {
   return (
     <section
       ref={containerRef}
-      className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 text-white py-20 md:py-32 px-4 sm:px-6 lg:px-8"
+      className="relative overflow-hidden bg-gradient-to-b from-gray-1000 to-gray-400 text-white pt-32 pb-20 md:pt-40 md:pb-32 px-4 sm:px-6 lg:px-8 mt-16" // Added pt-32 and mt-16 to account for fixed header
       // Consider adding an ID for easy navigation: id="hero"
     >
       <div className="max-w-7xl mx-auto relative z-10">
@@ -31,18 +31,18 @@ const Hero = () => {
           >
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 99, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+              className="text-4xl text-white/100 md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
             >
               Expert Small Engine Repair, Right At Your Doorstep.
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 99, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-xl text-gray-300 mb-8"
+              className="text-xl text-white/100 mb-8"
             >
               Royalty Repair brings certified technicians and fully-equipped mobile workshops to you, saving you time and hassle. Get your equipment back up and running without ever leaving home.
             </motion.p>
