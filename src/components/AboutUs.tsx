@@ -63,7 +63,7 @@ const AboutUs = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          About Royalty Repair
+          Your Trusted Partner in Mobile Engine Care
         </motion.h2>
 
         <div className="space-y-12"> {/* Main container for subsections */}
@@ -73,7 +73,7 @@ const AboutUs = () => {
             initial="hidden" whileInView="visible" viewport={{ once: true }}
           >
             <p>
-              Welcome to Royalty Repair, where we bring top-tier small engine repair services right to your doorstep. Founded on the principle of convenience and expertise, we understand that your time is valuable.
+              At Royalty Repair, we're more than just mechanics; we're problem solvers dedicated to keeping your essential equipment running smoothly. We founded our company on the belief that expert small engine repair should be convenient, reliable, and always customer-focused. We understand that dealing with broken equipment is frustrating, and our goal is to make the repair process as seamless as possible.
             </p>
           </motion.div>
 
@@ -82,9 +82,9 @@ const AboutUs = () => {
             initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="max-w-3xl mx-auto text-center"
           >
-            <h3 className="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">Our Mission</h3>
+            <h3 className="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">Our Commitment to You</h3>
             <p className="text-lg text-gray-700">
-              Our mission is simple: to provide reliable, efficient, and hassle-free repair solutions, allowing you to get back to your work and leisure with minimal disruption. We treat every engine with royal care.
+              Our mission is to deliver professional, high-quality small engine repair services directly to your location. We are committed to saving you time and effort, providing transparent service, and ensuring your complete satisfaction. We treat every customer like royalty and every engine with meticulous care.
             </p>
           </motion.div>
 
@@ -98,12 +98,12 @@ const AboutUs = () => {
               className="text-left order-2 md:order-1" // Text first on mobile, image first on desktop can be an option
               variants={textVariants} // Define or use a generic variant for text block itself
             >
-              <h3 className="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">Our Expertise</h3>
+              <h3 className="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">Professional Technicians, Royal Service</h3>
               <p className="text-lg text-gray-700 mb-4">
-                With years of experience and a passion for mechanics, our certified technicians are equipped to handle a wide array of small engine problems. We specialize in on-the-spot diagnostics and repairs for most common issues.
+                Our team consists of certified and experienced technicians who are passionate about small engines. They arrive with fully-equipped mobile workshops, ready to diagnose and repair a wide range of issues on-site. We invest in continuous training to stay updated with the latest engine technologies and repair techniques.
               </p>
               <p className="text-lg text-gray-700">
-                From routine maintenance to more complex fixes, we bring the workshop to you, ensuring quality and precision in every job.
+                From your lawnmower to your generator, we handle each repair with precision and a commitment to long-lasting solutions.
               </p>
             </motion.div>
             <motion.div
@@ -111,8 +111,8 @@ const AboutUs = () => {
               variants={imageVariant} // Use a specific variant for the image
             >
               <Image
-                src="/HeroSatisfy1.png"
-                alt="Royalty Repair technician working with a smile" // More descriptive alt
+                src="/HeroSatisfy1.png" // Consider a different image if this is used in Hero too
+                alt="Royalty Repair technician providing expert on-site service" // More descriptive alt
                 width={600}
                 height={450} // Assuming 4:3 aspect ratio for this image
                 className="object-cover w-full h-full"
@@ -120,18 +120,19 @@ const AboutUs = () => {
             </motion.div>
           </motion.div>
 
-          {/* Why Choose Us Section - Can be full width again */}
+          {/* This "Why Choose Us" section might be better suited for a dedicated "Key Benefits" section as per the plan.
+              For now, I'll keep it refined here, but we can move/expand it later. */}
           <motion.div
             variants={contentBlockVariant(0.3)} // Stagger after expertise/image block
             initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="max-w-3xl mx-auto text-center mt-12" // Added mt-12
           >
-            <h3 className="text-2xl md:text-3xl font-semibold text-primary-blue mb-6">Why Choose On-Site Mobile Repair?</h3>
+            <h3 className="text-2xl md:text-3xl font-semibold text-primary-blue mb-6">The Royalty Repair Advantage</h3>
             <ul className="list-none sm:list-disc sm:list-inside space-y-3 text-gray-700 text-lg text-left sm:text-center inline-block"> {/* Centering list items */}
-              <li className="flex items-start sm:items-center"><span className="font-semibold text-dark-gray mr-2 text-accent-gold">✓</span> Convenience: We come to you, saving time and hassle.</li>
-              <li className="flex items-start sm:items-center"><span className="font-semibold text-dark-gray mr-2 text-accent-gold">✓</span> Efficiency: Many repairs completed in a single visit.</li>
-              <li className="flex items-start sm:items-center"><span className="font-semibold text-dark-gray mr-2 text-accent-gold">✓</span> Transparency: Clear communication and fair pricing.</li>
-              <li className="flex items-start sm:items-center"><span className="font-semibold text-dark-gray mr-2 text-accent-gold">✓</span> Quality: Expert service using quality parts.</li>
+              <li className="flex items-start sm:items-center"><span className="font-semibold text-dark-gray mr-2 text-accent-gold">✓</span> **Unmatched Convenience:** We bring the workshop to you, saving your valuable time and effort.</li>
+              <li className="flex items-start sm:items-center"><span className="font-semibold text-dark-gray mr-2 text-accent-gold">✓</span> **Expert Diagnostics & Repair:** Certified technicians fix it right, the first time.</li>
+              <li className="flex items-start sm:items-center"><span className="font-semibold text-dark-gray mr-2 text-accent-gold">✓</span> **Transparent Process:** Clear communication, fair pricing, and easy service tracking via our CRM.</li>
+              <li className="flex items-start sm:items-center"><span className="font-semibold text-dark-gray mr-2 text-accent-gold">✓</span> **Quality You Can Trust:** We use high-quality parts and stand by our workmanship.</li>
             </ul>
           </motion.div>
         </div>

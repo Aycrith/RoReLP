@@ -6,14 +6,12 @@ const testimonialsData = [
   {
     quote: "Royalty Repair has been a game-changer for our shop! The scheduling and invoicing features alone save us hours every week. Highly recommend!",
     name: "John 'Sparky' Smith",
-    shop: "Smith & Sons Engine Repair",
-    avatar: "/assets/images/avatar-placeholder-1.jpg",
+    shop: "Smith & Sons Engine Repair"
   },
   {
     quote: "We were drowning in paperwork before Royalty Repair. Now, customer history is at our fingertips, and managing jobs is a breeze. It's the best investment we've made.",
     name: "Maria Garcia",
-    shop: "Garcia's Outdoor Power",
-    avatar: "/assets/images/avatar-placeholder-2.jpg",
+    shop: "Garcia's Outdoor Power"
   }
 ];
 
