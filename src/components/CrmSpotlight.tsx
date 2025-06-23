@@ -48,10 +48,6 @@ const CrmSpotlight = () => {
     visible: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.7, delay: 0.2, ease: "easeOut" } }
   };
 
-  const textContentVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.4, ease: "easeOut" } }
-  };
 
   const features = [
     {

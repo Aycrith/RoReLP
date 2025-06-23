@@ -73,7 +73,7 @@ const AboutUs = () => {
             initial="hidden" whileInView="visible" viewport={{ once: true }}
           >
             <p>
-              At Royalty Repair, we're more than just mechanics; we're problem solvers dedicated to keeping your essential equipment running smoothly. We founded our company on the belief that expert small engine repair should be convenient, reliable, and always customer-focused. We understand that dealing with broken equipment is frustrating, and our goal is to make the repair process as seamless as possible.
+              At Royalty Repair, we&apos;re more than just mechanics; we&apos;re problem solvers dedicated to keeping your essential equipment running smoothly. We founded our company on the belief that expert small engine repair should be convenient, reliable, and always customer-focused. We understand that dealing with broken equipment is frustrating, and our goal is to make the repair process as seamless as possible.
             </p>
           </motion.div>
 
