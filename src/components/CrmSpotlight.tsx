@@ -138,7 +138,7 @@ const CrmSpotlight = () => {
           variants={imageVariants}
         >
           <Image
-            src="/public/HEROSTORYLANDINGPAGE.PNG" // Replace with an actual CRM dashboard screenshot/mockup
+            src="/HEROSTORYLANDINGPAGE.PNG" // Replace with an actual CRM dashboard screenshot/mockup
             alt="Royalty Repair Customer Portal Dashboard"
             width={1000} // Adjust as needed
             height={600} // Adjust as needed

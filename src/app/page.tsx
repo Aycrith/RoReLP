@@ -16,6 +16,7 @@ import ProblemSolution from "@/components/ProblemSolution";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import CallToAction from "@/components/CallToAction";
+import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
 import Preloader from '@/components/Preloader';
 import FloatingActionButton from '@/components/FloatingActionButton'; // New import
@@ -60,6 +61,7 @@ export default function Home() {
             <Testimonials />
             <FAQ />
             <CallToAction />
+            <ContactForm />
           </main>
           <Footer />
         </motion.div>
