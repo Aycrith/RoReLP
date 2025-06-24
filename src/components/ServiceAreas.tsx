@@ -3,15 +3,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const currentServiceAreas = [
-  { name: "Springfield Metro", description: "Our primary service hub, offering rapid response times for all your repair needs." },
-  { name: "Shelbyville County", description: "Comprehensive on-site repairs available throughout the county." },
-  { name: "Ogdenville & N. Haverbrook", description: "Extending our expert mobile services to these neighboring communities." } // Shortened for flow
+  { name: "Orlando Metro Area", description: "Serving all of Orlando with expert mobile small engine repair services. Same-day service available." },
+  { name: "Central Florida", description: "Comprehensive on-site repairs throughout Central Florida, from Ocala to Kissimmee." },
+  { name: "Volusia & Flagler Counties", description: "Professional small engine repair services available throughout Volusia and Flagler counties." }
 ];
 
 const expansionAreas = [
-  { name: "Clearwater, FL", description: "Exciting new full-service area coming soon! Get on the list!" },
-  { name: "Largo, FL", description: "Get ready for Royalty Repair's on-site convenience and expertise!" },
-  { name: "St. Petersburg, FL", description: "Premium small engine care and mobile repairs arriving shortly!" }
+  { name: "Tampa Bay Area", description: "Coming soon to Tampa, St. Petersburg, and surrounding areas. Join our waitlist!" },
+  { name: "Southwest Florida", description: "Expanding to serve Naples, Fort Myers, and surrounding communities." },
+  { name: "Space Coast", description: "Launching service in the Space Coast area soon. Be the first to know!" }
 ];
 
 const ServiceAreas = () => {

@@ -35,7 +35,7 @@ const Hero = () => {
               transition={{ delay: 0.1, duration: 0.6 }}
               className="text-4xl text-white/100 md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
             >
-              The #1 CRM for Small Engine Repair Shops.
+              Expert Small Engine Repair, Right At Your Doorstep.
             </motion.h1>
 
             <motion.p
@@ -44,7 +44,7 @@ const Hero = () => {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-xl text-white/100 mb-8 max-w-2xl mx-auto"
             >
-              Streamline your operations, manage customers effortlessly, and grow your small engine repair business with Royalty Repair CRM. Get started today!
+              Royalty Repair brings certified technicians and fully-equipped mobile workshops to you, saving you time and hassle. Get your equipment back up and running without ever leaving home.
             </motion.p>
 
             <motion.div
