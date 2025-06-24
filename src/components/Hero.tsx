@@ -57,13 +57,13 @@ const Hero = () => {
                 href="#get-started"
                 className="bg-primary-blue hover:bg-royal-purple text-neutral-white font-semibold py-4 px-8 rounded-lg transition-colors duration-300 text-center"
               >
-                Get Started Free
+                Book Your On-Site Repair
               </a>
               <a
                 href="#features"
                 className="bg-transparent hover:bg-gray-700 border-2 border-white text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-300 text-center"
               >
-                Explore Features
+                Learn How It Works
               </a>
             </motion.div>
 
