@@ -10,7 +10,8 @@ const ContactForm = () => {
     message: ''
   });
   
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+  const [formStatus, setFormStatus] = useState<FormStatus>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
@@ -113,7 +114,7 @@ const ContactForm = () => {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
-                <p className="text-gray-600">Thank you for reaching out. We'll get back to you soon!</p>
+                <p className="text-gray-600">Thank you for reaching out. We&apos;ll get back to you soon!</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -187,9 +188,9 @@ const ContactForm = () => {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    disabled={formStatus === 'submitting' || formStatus === 'success'}
+                    disabled={['submitting', 'success'].includes(formStatus)}
                     className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-colors ${
-                      formStatus === 'submitting' || formStatus === 'success'
+                      ['submitting', 'success'].includes(formStatus)
                         ? 'bg-yellow-400 cursor-not-allowed'
                         : 'bg-accent-gold hover:bg-yellow-600'
                     }`}
