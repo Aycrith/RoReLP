@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Royalty Repair - CRM for Repair Shops",
-  description: "The #1 CRM for Small-Engine Repair Shops. Streamline bookings, manage customers, and boost revenue.",
+  title: "Royalty Repair - Small Engine Repair Shop CRM | Manage & Grow Your Business",
+  description: "The #1 CRM for Small Engine Repair Shops. Streamline operations, manage customers, schedule jobs, send invoices, and boost revenue with Royalty Repair.",
   icons: {
     icon: "/favicon.ico", // Main favicon
     shortcut: "/favicon-16x16.png", // For older browsers
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
       { rel: 'icon', type: 'image/png', sizes: '512x512', url: '/android-chrome-512x512.png' },
     ],
   },
-  keywords: ["crm", "small engine repair", "shop management", "invoicing software", "scheduling tool", "mechanic software", "repair shop crm"],
+  keywords: ["crm", "small engine repair", "shop management", "customer relationship management", "invoicing software", "scheduling tool", "mechanic software", "repair shop crm", "lawnmower repair software", "generator repair management"],
 };
 
 export default function RootLayout({

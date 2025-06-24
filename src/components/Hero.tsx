@@ -35,16 +35,16 @@ const Hero = () => {
               transition={{ delay: 0.1, duration: 0.6 }}
               className="text-4xl text-white/100 md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
             >
-              Expert Small Engine Repair, Right At Your Doorstep.
+              The #1 CRM for Small Engine Repair Shops.
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-xl text-white/100 mb-8"
+              className="text-xl text-white/100 mb-8 max-w-2xl mx-auto"
             >
-              Royalty Repair brings certified technicians and fully-equipped mobile workshops to you, saving you time and hassle. Get your equipment back up and running without ever leaving home.
+              Streamline your operations, manage customers effortlessly, and grow your small engine repair business with Royalty Repair CRM. Get started today!
             </motion.p>
 
             <motion.div
@@ -54,16 +54,16 @@ const Hero = () => {
               className="flex flex-col sm:flex-row gap-4 justify-center mb-12" // Centered buttons
             >
               <a
-                href="#services" // Changed href to a more relevant section or a booking page
-                className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-4 px-8 rounded-lg transition-colors duration-300 text-center"
+                href="#get-started"
+                className="bg-primary-blue hover:bg-royal-purple text-neutral-white font-semibold py-4 px-8 rounded-lg transition-colors duration-300 text-center"
               >
-                Book Your On-Site Repair
+                Get Started Free
               </a>
               <a
-                href="#how-it-works"
-                className="bg-transparent hover:bg-gray-700 border-2 border-white text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-300 text-center" // Adjusted hover for better contrast
+                href="#features"
+                className="bg-transparent hover:bg-gray-700 border-2 border-white text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-300 text-center"
               >
-                Learn How It Works
+                Explore Features
               </a>
             </motion.div>
 

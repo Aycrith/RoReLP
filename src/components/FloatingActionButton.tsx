@@ -24,35 +24,26 @@ const FloatingActionButton = () => {
     return () => unsubscribe();
   }, [scrollY]);
 
-  const scrollToExpansionForm = () => {
-    const element = document.getElementById('expansion-form');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-      // Fallback: scroll to top or another relevant section if form not found
-      // This might happen if the ExpansionOffer section is conditionally rendered
-      // or if the FAB is rendered on a page without that form.
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  // Removed scrollToExpansionForm function
 
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.button
-          onClick={scrollToExpansionForm}
+        <motion.a // Changed button to a for tel: link
+          href="tel:+13862748701"
           className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 bg-accent-gold text-neutral-white p-3.5 sm:p-4 rounded-full shadow-xl hover:bg-yellow-500 active:scale-95 transform transition-all duration-200 z-[100] flex items-center space-x-2 group"
           initial={{ opacity: 0, y: 50, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.8 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20, duration: 0.3 }}
           whileHover={{ scale: 1.05 }}
-          aria-label="Claim Expansion Offer"
+          aria-label="Call Us at (386) 274-8701"
         >
+          {/* Phone Icon */}
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 sm:w-7 sm:h-7">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
           </svg>
-          <span className="hidden sm:group-hover:inline sm:group-focus:inline pr-2 text-sm font-medium transition-all duration-300 ease-out">Claim Offer</span>
+          <span className="hidden sm:group-hover:inline sm:group-focus:inline pr-2 text-sm font-medium transition-all duration-300 ease-out">Call (386) 274-8701</span>
         </motion.button>
       )}
     </AnimatePresence>
