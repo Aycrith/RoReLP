@@ -13,7 +13,7 @@ const CallToAction = () => {
 
   return (
     <motion.section
-      id="cta" // For navigation, if needed
+      id="get-started" // For navigation, if needed - Updated ID
       className="py-16 md:py-24 bg-primary-blue/5" // Using a light shade of primary blue
     >
       <div className="container mx-auto px-6 text-center">
@@ -21,39 +21,39 @@ const CallToAction = () => {
           className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark-gray"
           {...animationProps(0.05)}
         >
-          Ready for Hassle-Free Small Engine Repair?
+          Ready to Streamline Your Repair Shop?
         </motion.h2>
         <motion.p
           className="text-lg md:text-xl mb-10 text-gray-700 max-w-2xl mx-auto"
           {...animationProps(0.1)}
         >
-          Experience the convenience of Royalty Repair. Our certified technicians come to you, providing expert service at your doorstep. Get your equipment back in top shape without the usual fuss.
+          Join Royalty Repair and transform your small engine repair business with our powerful CRM. Sign up for a free trial or contact us to learn how we can help you manage your operations more efficiently.
         </motion.p>
         <motion.div
           className="flex flex-col sm:flex-row justify-center items-center gap-6"
+          {...animationProps(0.15)}
         >
-          {/* Primary CTA Button */}
-          <motion.div {...animationProps(0.15)}>
-            <Link
-              href="#contact" // Or a dedicated booking page e.g., /book-service
-              className="block bg-accent-gold text-neutral-white px-10 py-4 rounded-lg font-semibold text-lg
-                         hover:bg-yellow-500 hover:shadow-xl hover:ring-2 hover:ring-yellow-300 hover:ring-opacity-50
-                         transform transition-all duration-200 active:scale-95 shadow-md"
-            >
-              Book Your On-Site Repair Now
-            </Link>
-          </motion.div>
-
-          {/* Secondary CTA Button (Optional - e.g., for getting a quote or learning more) */}
-          <motion.div {...animationProps(0.2)}>
-            <Link
-              href="#services" // Or a dedicated quote page e.g., /get-quote
-              className="block bg-transparent border-2 border-primary-blue text-primary-blue px-10 py-4 rounded-lg font-semibold text-lg hover:bg-primary-blue hover:text-neutral-white transition-colors shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
-            >
-              Get a Quick Quote
-            </Link>
-          </motion.div>
+          <Link
+            href="/signup" // Link to a future signup page
+            className="block bg-primary-blue text-neutral-white px-10 py-4 rounded-lg font-semibold text-lg
+                       hover:bg-royal-purple hover:shadow-xl transform transition-all duration-200 active:scale-95 shadow-md"
+          >
+            Start Your Free Trial
+          </Link>
+          <Link
+            href="/request-demo" // Link to a future demo page
+            className="block bg-accent-gold text-neutral-white px-10 py-4 rounded-lg font-semibold text-lg
+                       hover:bg-yellow-500 hover:shadow-xl transform transition-all duration-200 active:scale-95 shadow-md"
+          >
+            Request a Demo
+          </Link>
         </motion.div>
+        <motion.p
+          className="text-md md:text-lg mt-8 text-gray-600"
+          {...animationProps(0.2)}
+        >
+          Or call us to inquire: <a href="tel:+13862748701" className="text-primary-blue font-semibold hover:underline">(386) 274-8701</a>
+        </motion.p>
       </div>
     </motion.section>
   );

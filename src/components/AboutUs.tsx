@@ -84,7 +84,7 @@ const AboutUs = () => {
           >
             <h3 className="text-2xl md:text-3xl font-semibold text-primary-blue mb-4">Our Commitment to You</h3>
             <p className="text-lg text-gray-700">
-              Our mission is to deliver professional, high-quality small engine repair services directly to your location. We are committed to saving you time and effort, providing transparent service, and ensuring your complete satisfaction. We treat every customer like royalty and every engine with meticulous care.
+              Our mission is to empower small engine repair businesses with top-tier CRM solutions and also to deliver professional, high-quality repair services directly where needed. We are committed to saving you time, providing transparent operations through our software, and ensuring your complete satisfaction. We treat every client like royalty.
             </p>
           </motion.div>
 

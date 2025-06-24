@@ -7,34 +7,34 @@ import InteractiveCard from './InteractiveCard';
 
 const featuresData = [
   {
-    icon: "/assets/icons/engine-repair.svg", // Placeholder icon
-    title: "Lawnmower Repair",
-    description: "Comprehensive on-site repair for all types of lawnmowers: push, riding, zero-turn, and robotic."
+    icon: "/assets/icons/calendar-check.svg", // Placeholder icon (can be updated)
+    title: "Job Scheduling & Dispatch",
+    description: "Efficiently schedule jobs, assign technicians, and manage your team’s calendar in one place."
   },
   {
-    icon: "/assets/icons/generator-repair.svg", // Placeholder icon
-    title: "Generator Maintenance",
-    description: "Keep your power on. We service and repair portable and standby generators to ensure reliability."
+    icon: "/assets/icons/crm-icon.svg", // Placeholder icon
+    title: "Customer Management",
+    description: "Keep detailed customer records, service history, and communication logs for personalized service."
   },
   {
-    icon: "/assets/icons/string-trimmer-repair.svg",
-    title: "String Trimmer Repair",
-    description: "Keep your yard looking sharp with our professional string trimmer repair services. We service all major brands and models."
+    icon: "/assets/icons/document-access.svg", // Placeholder icon
+    title: "Invoicing & Payments",
+    description: "Create professional invoices, track payments, and integrate with payment gateways seamlessly."
   },
   {
-    icon: "/assets/icons/pressure-washer-repair.svg", // Placeholder icon
-    title: "Pressure Washer Repair",
-    description: "Restore cleaning power. On-site diagnostics and repair for various pressure washer models."
+    icon: "/assets/icons/history-log.svg", // Placeholder icon
+    title: "Service History Tracking",
+    description: "Access complete service history for every customer and piece of equipment instantly."
   },
   {
-    icon: "/assets/icons/small-engine-generic.svg", // Placeholder icon
-    title: "Other Small Engines",
-    description: "Tillers, leaf blowers, chainsaws, and more. If it has a small engine, we can likely fix it!"
+    icon: "/assets/icons/progress-tracking.svg", // Placeholder icon (mobile access related)
+    title: "Mobile Access for Techs",
+    description: "Equip your technicians with mobile access to job details, customer info, and service history on the go."
   },
   {
-    icon: "/assets/icons/crm-icon.svg", // Placeholder icon for CRM
-    title: "Easy Service Management",
-    description: "Track your appointments, view service history, and manage your repairs online with our Customer Portal."
+    icon: "/assets/icons/diagnostics.svg", // Placeholder icon (reporting related)
+    title: "Reporting & Analytics",
+    description: "Gain insights into your business performance with customizable reports and analytics."
   }
 ];
 
@@ -108,7 +108,7 @@ const Features = () => {
           variants={sectionTitleVariants}
           initial="hidden" whileInView="visible" viewport={{ once: true }}
         >
-          Comprehensive On-Site Repair Services
+          Key Features of Royalty Repair CRM
         </motion.h2>
 
         <motion.div

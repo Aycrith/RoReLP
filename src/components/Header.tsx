@@ -82,6 +82,9 @@ const Header = () => {
           >
             Get Started
           </Link>
+          <a href="tel:+13862748701" className="text-dark-gray hover:text-primary-blue transition-colors ml-4">
+            (386) 274-8701
+          </a>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -135,6 +138,13 @@ const Header = () => {
               >
                 Get Started
               </Link>
+              <a
+                href="tel:+13862748701"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block py-3 px-3 text-lg text-dark-gray hover:bg-gray-100 rounded-md transition-colors"
+              >
+                Call (386) 274-8701
+              </a>
             </nav>
           </motion.div>
         )}

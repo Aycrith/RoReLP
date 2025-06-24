@@ -12,6 +12,11 @@ const testimonialsData = [
     quote: "We were drowning in paperwork before Royalty Repair. Now, customer history is at our fingertips, and managing jobs is a breeze. It's the best investment we've made.",
     name: "Maria Garcia",
     shop: "Garcia's Outdoor Power"
+  },
+  {
+    quote: "The mobile app for technicians is fantastic! My team can access job details and update statuses on the go. Royalty Repair CRM has truly modernized our workflow.",
+    name: "David Lee",
+    shop: "Lee's Mobile Mower Mechanics"
   }
 ];
 

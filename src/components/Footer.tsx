@@ -45,6 +45,9 @@ const Footer = () => {
             <p className="text-sm text-gray-500">
               <a href="mailto:support@royaltyrepair.com" className="hover:text-accent-gold transition-colors">support@royaltyrepair.com</a>
             </p>
+            <p className="text-sm text-gray-500 mt-2">
+              <a href="tel:+13862748701" className="hover:text-accent-gold transition-colors">(386) 274-8701</a>
+            </p>
           </motion.div>
 
           {/* Column 2: Product */}
