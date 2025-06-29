@@ -1,27 +1,26 @@
-"use client"; // Required for useState, useEffect
-import React, { useState, useEffect } from 'react'; // Import useState, useEffect
-import { motion, AnimatePresence } from 'framer-motion'; // Import AnimatePresence, motion
-// Removed Image import from "next/image" as it's not directly used here.
+"use client";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import ExpansionOffer from "@/components/ExpansionOffer"; // New import
+import ExpansionOffer from "@/components/ExpansionOffer";
 import Features from "@/components/Features";
 import AboutUs from "@/components/AboutUs";
 import ServicesProcess from "@/components/ServicesProcess";
 import KeyBenefits from "@/components/KeyBenefits";
-import CrmSpotlight from "@/components/CrmSpotlight"; // Import the new CRM spotlight component
+import CrmSpotlight from "@/components/CrmSpotlight";
 import ServiceAreas from "@/components/ServiceAreas";
 import ProblemSolution from "@/components/ProblemSolution";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import CallToAction from "@/components/CallToAction";
-import OnboardingForm from "@/components/OnboardingForm";
+import ContactForm from "@/components/ContactFormWithAnalytics"; // Using enhanced version with analytics
 import Footer from "@/components/Footer";
 import Preloader from '@/components/Preloader';
-import FloatingActionButton from '@/components/FloatingActionButton'; // New import
+import FloatingActionButton from '@/components/FloatingActionButton';
 
-export default function Home() {
+export default function HomeWithAnalytics() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -45,28 +44,28 @@ export default function Home() {
           key="mainContent"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.1 }} // Slightly shorter duration, earlier delay
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <Header />
           <main>
             <Hero />
-            <ExpansionOffer /> {/* New component */}
+            <ExpansionOffer />
             <Features />
             <AboutUs />
             <ServicesProcess />
             <KeyBenefits />
-            <CrmSpotlight /> {/* Add the CRM Spotlight component to the page structure */}
+            <CrmSpotlight />
             <ServiceAreas />
             <ProblemSolution />
             <Testimonials />
             <FAQ />
             <CallToAction />
-            <OnboardingForm />
+            <ContactForm />
           </main>
           <Footer />
         </motion.div>
       )}
-      <FloatingActionButton /> {/* Add FAB here */}
+      <FloatingActionButton />
     </>
   );
 }

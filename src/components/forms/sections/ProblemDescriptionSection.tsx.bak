@@ -1,0 +1,104 @@
+import { FormField, FormSelect, FormTextarea } from '@/components/ui/FormFields';
+import { UseFormReturn } from 'react-hook-form';
+import { OnboardingFormData } from '@/lib/validations/onboarding';
+
+interface ProblemDescriptionSectionProps {
+  form: UseFormReturn<OnboardingFormData>;
+  onNext: () => void;
+  onPrevious: () => void;
+}
+
+export const ProblemDescriptionSection = ({ form, onNext, onPrevious }: ProblemDescriptionSectionProps) => {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">Problem Description</h2>
+        <p className="text-gray-600">Please describe what&apos;s wrong with your equipment and any symptoms you&apos;ve noticed.</p>
+      </div>
+
+      <FormField
+        name="problem.issue_description"
+        label="What seems to be the problem?"
+        required
+        form={form}
+        render={({ field }) => (
+          <FormTextarea
+            {...field}
+            placeholder="Please describe the issue in as much detail as possible..."
+            rows={4}
+          />
+        )}
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormField
+          name="problemSeverity"
+          label="How severe is the problem?"
+          required
+          form={form}
+          render={({ field }) => (
+            <FormSelect
+              {...field}
+              options={[
+                { value: 'minor', label: 'Minor - Equipment still works' },
+                { value: 'moderate', label: 'Moderate - Reduced performance' },
+                { value: 'major', label: 'Major - Equipment barely works' },
+                { value: 'critical', label: 'Critical - Equipment won&apos;t start/work' }
+              ]}
+              placeholder="Select severity level"
+            />
+          )}
+        />
+
+        <FormField
+          name="whenDidProblemStart"
+          label="When did the problem start?"
+          form={form}
+          render={({ field }) => (
+            <FormSelect
+              {...field}
+              options={[
+                { value: 'today', label: 'Today' },
+                { value: 'this-week', label: 'This week' },
+                { value: 'this-month', label: 'This month' },
+                { value: 'longer', label: 'Longer than a month ago' },
+                { value: 'unknown', label: 'Not sure' }
+              ]}
+              placeholder="Select timeframe"
+            />
+          )}
+        />
+      </div>
+
+      <FormField
+        name="previousRepairs"
+        label="Have you had any previous repairs or maintenance done on this equipment?"
+        form={form}
+        render={({ field }) => (
+          <FormTextarea
+            {...field}
+            placeholder="If yes, please describe what was done and when..."
+            rows={3}
+          />
+        )}
+      />
+
+      <div className="flex justify-between pt-6">
+        <button
+          type="button"
+          onClick={onPrevious}
+          className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          Previous
+        </button>
+        <button
+          type="button"
+          onClick={onNext}
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};

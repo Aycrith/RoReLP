@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from 'next/script';
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { GoogleTagManager, GTMNoScript } from "@/components/analytics/GoogleTagManager";
-import StructuredData from "@/components/StructuredData";
-import { Toaster } from 'react-hot-toast';
-import { Suspense } from 'react';
+import { generateOrganizationSchema, generateLocalBusinessSchema, generateWebsiteSchema } from "@/lib/structuredData";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,9 +16,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://royaltyrepair.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://royaltyrepair.org';
 const SITE_NAME = 'Royalty Repair';
 const SITE_DESCRIPTION = 'Expert mobile small engine repair service at your doorstep. Fast, reliable, and convenient service for all your small engine needs.';
+
+// Generate structured data for the website
+const structuredData = [
+  generateOrganizationSchema(),
+  generateLocalBusinessSchema(),
+  generateWebsiteSchema()
+];
+
+// Convert structured data to JSON string
+const structuredDataJson = JSON.stringify(structuredData);
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -122,40 +131,41 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
-        <StructuredData />
-        <Suspense fallback={null}>
-          <GoogleAnalytics />
-          <GoogleTagManager />
-        </Suspense>
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: structuredDataJson }}
+          key="structured-data"
+        />
+        
+        {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.google.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        
+        {/* Preload critical fonts */}
+        <link
+          rel="preload"
+          href="/fonts/geist-sans.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        
+        <GoogleAnalytics />
+        <GoogleTagManager />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100`}
-      >
+      <body className="min-h-screen bg-background font-sans antialiased">
         <GTMNoScript />
         {children}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#363636',
-              color: '#fff',
-            },
-            success: {
-              style: {
-                background: '#10b981',
-              },
-            },
-            error: {
-              style: {
-                background: '#ef4444',
-              },
-            },
-          }}
+        
+        {/* Load non-critical scripts after page load */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js"
+          strategy="afterInteractive"
         />
       </body>
     </html>

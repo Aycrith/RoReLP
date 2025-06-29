@@ -1,0 +1,151 @@
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useFieldArray, UseFormReturn, useWatch, Control, FieldValues, ArrayPath } from 'react-hook-form';
+
+interface UseFormFieldArrayOptions<T extends FieldValues> {
+  name: ArrayPath<T>;
+  formMethods: UseFormReturn<T>;
+  defaultValue?: unknown;
+  keyName?: string;
+  shouldUnregister?: boolean;
+}
+
+export const useFormFieldArray = <T extends FieldValues>({
+  name,
+  formMethods,
+  defaultValue,
+  keyName = 'id',
+  shouldUnregister = false,
+}: UseFormFieldArrayOptions<T>) => {
+  const { control, getValues, setValue } = formMethods;
+  const fieldArray = useFieldArray({
+    control,
+    name,
+    keyName,
+    shouldUnregister,
+  });
+  
+  const fields = useWatch({
+    control,
+    name,
+    defaultValue: defaultValue || [],
+  }) as unknown[];
+  
+  const prevFieldsLength = useRef(fields?.length || 0);
+  
+  // Handle adding a new field with a unique ID
+  const addField = useCallback((value?: Record<string, unknown>) => {
+    const newField = {
+      ...(defaultValue || {}),
+      ...(value || {}),
+      [keyName]: `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    };
+    
+    fieldArray.append(newField as never);
+    
+    // Return the ID of the newly added field
+    return newField[keyName];
+  }, [defaultValue, fieldArray, keyName]);
+  
+  // Handle removing a field by index
+  const removeField = useCallback((index: number) => {
+    fieldArray.remove(index);
+  }, [fieldArray]);
+  
+  // Handle moving a field up or down
+  const moveField = useCallback((from: number, to: number) => {
+    fieldArray.move(from, to);
+  }, [fieldArray]);
+  
+  // Handle updating a field by index
+  const updateField = useCallback((index: number, value: Record<string, unknown>) => {
+    const currentFields = getValues(name) || [];
+    const updatedFields = [...currentFields];
+    updatedFields[index] = { ...updatedFields[index], ...value };
+    setValue(name, updatedFields as never, { shouldDirty: true });
+  }, [getValues, name, setValue]);
+  
+  // Handle reordering fields
+  const reorderFields = useCallback((newOrder: number[]) => {
+    const currentFields = getValues(name) || [];
+    const reorderedFields = newOrder.map(index => currentFields[index]);
+    setValue(name, reorderedFields as never, { shouldDirty: true });
+  }, [getValues, name, setValue]);
+  
+  // Effect to handle adding default fields
+  useEffect(() => {
+    if (defaultValue && (!fields || fields.length === 0)) {
+      fieldArray.append(defaultValue as never);
+    }
+  }, [defaultValue, fieldArray, fields]);
+  
+  // Effect to handle field array changes
+  useEffect(() => {
+    const currentLength = fields?.length || 0;
+    
+    if (currentLength > prevFieldsLength.current) {
+      // Field was added
+      // You can add any logic here when a field is added
+    } else if (currentLength < prevFieldsLength.current) {
+      // Field was removed
+      // You can add any cleanup logic here when a field is removed
+    }
+    
+    prevFieldsLength.current = currentLength;
+  }, [fields]);
+  
+  return {
+    ...fieldArray,
+    fields,
+    addField,
+    removeField,
+    moveField,
+    updateField,
+    reorderFields,
+    control: control as Control<T>,
+  };
+};
+
+// Helper component for rendering field arrays
+export const FieldArrayProvider = <T extends FieldValues>({
+  children,
+  name,
+  formMethods,
+  defaultValue,
+  keyName = 'id',
+  shouldUnregister = false,
+}: {
+  children: (props: ReturnType<typeof useFormFieldArray<T>>) => React.ReactNode;
+} & UseFormFieldArrayOptions<T>) => {
+  const fieldArray = useFormFieldArray<T>({
+    name,
+    formMethods,
+    defaultValue,
+    keyName,
+    shouldUnregister,
+  });
+  
+  return <>{children(fieldArray)}</>;
+};
+
+// Helper hook for individual field array item
+export const useFieldArrayItem = <T extends FieldValues>(
+  name: string,
+  index: number,
+  control: Control<T>
+) => {
+  const fieldName = `${name}.${index}`;
+  const value = useWatch({
+    control,
+    name: fieldName as never,
+  }) as unknown;
+  
+  const update = useCallback(() => {
+    // This will be handled by the parent form
+  }, []);
+  
+  return {
+    name: fieldName,
+    value,
+    update,
+  };
+};

@@ -1,7 +1,20 @@
 "use client";
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { OptimizedImage } from './ui/OptimizedImage';
+import Image from 'next/image';
+
+
+
+const trackEvent = (action: string, category?: string, label?: string) => {
+  if (typeof window !== 'undefined' && window.dataLayer) {
+    (window.dataLayer as unknown as Array<Record<string, unknown>>).push({
+      event: 'custom_event',
+      action,
+      category,
+      label
+    });
+  }
+};
 
 const Hero = () => {
   // Refs for parallax
@@ -12,7 +25,15 @@ const Hero = () => {
   });
 
   // Parallax effects
-  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '30%']); // Keep parallax if desired
+  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+
+  const handleCtaClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    // Track CTA click using GTM
+    trackEvent('cta_click', 'CTA', 'Hero - Book Your On-Site Repair');
+    // Smooth scroll to the contact form
+    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <section
@@ -20,25 +41,31 @@ const Hero = () => {
       id="hero"
       className="relative overflow-hidden bg-gradient-to-b from-gray-1000 to-gray-400 text-white pt-32 pb-20 md:pt-40 md:pb-32 px-4 sm:px-6 lg:px-8 mt-16"
     >
-      {/* Background Image with OptimizedImage */}
+      {/* Background Image with Next.js Image */}
       <div className="absolute inset-0 z-0">
-        <OptimizedImage
+        <Image
           src="/images/hero-bg.jpg"
           alt="Small engine repair service"
           fill
           priority
           className="object-cover opacity-20"
           quality={75}
+          sizes="100vw"
+          style={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            inset: 0,
+          }}
         />
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Changed to a single column layout for focused messaging */}
         <div className="text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto" // Increased max-width for better readability
+            className="max-w-3xl mx-auto"
           >
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -62,20 +89,12 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-12" // Centered buttons
+              className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
             >
               <a
-                href="#get-started"
-                className="relative overflow-hidden group bg-primary-blue hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-300 text-center inline-flex items-center justify-center"
-                onClick={() => {
-                  // Track CTA click
-                  if (typeof window !== 'undefined' && window.gtag) {
-                    window.gtag('event', 'click', {
-                      event_category: 'CTA',
-                      event_label: 'Hero - Book Your On-Site Repair'
-                    });
-                  }
-                }}
+                href="#contact"
+                onClick={handleCtaClick}
+                className="relative overflow-hidden group bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-300 text-center inline-flex items-center justify-center"
               >
                 <span className="relative z-10">Book Your On-Site Repair</span>
                 <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -87,16 +106,6 @@ const Hero = () => {
                 Learn How It Works
               </a>
             </motion.div>
-
-            {/* Optional: Add a small visual element or a trust signal if relevant, e.g., "Certified Technicians" */}
-            {/* <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-sm text-gray-400"
-            >
-              <p>Fast, Reliable, and Convenient Service Guaranteed.</p>
-            </motion.div> */}
           </motion.div>
         </div>
       </div>

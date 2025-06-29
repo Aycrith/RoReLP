@@ -3,15 +3,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const currentServiceAreas = [
-  { name: "Orlando Metro Area", description: "Serving all of Orlando with expert mobile small engine repair services. Same-day service available." },
-  { name: "Central Florida", description: "Comprehensive on-site repairs throughout Central Florida, from Ocala to Kissimmee." },
-  { name: "Volusia & Flagler Counties", description: "Professional small engine repair services available throughout Volusia and Flagler counties." }
+  { name: "Bradenton, FL", description: "Expert small engine repair services now available throughout Bradenton. Same-day service available for most repairs." },
+  { name: "Tampa, FL", description: "Comprehensive mobile repair services covering all of Tampa. We come to you for convenient service." },
+  { name: "Sarasota, FL", description: "Professional small engine repair services now serving the Sarasota area. Schedule your appointment today!" }
 ];
 
 const expansionAreas = [
-  { name: "Tampa Bay Area", description: "Coming soon to Tampa, St. Petersburg, and surrounding areas. Join our waitlist!" },
-  { name: "Southwest Florida", description: "Expanding to serve Naples, Fort Myers, and surrounding communities." },
-  { name: "Space Coast", description: "Launching service in the Space Coast area soon. Be the first to know!" }
+  { name: "St. Petersburg, FL", description: "Expanding to St. Petersburg soon! Join our waitlist for early access to our services." },
+  { name: "Clearwater, FL", description: "Coming soon to Clearwater! Get notified when we launch in your area." },
+  { name: "Largo, FL", description: "Largo service area launching shortly. Be the first to know when we arrive!" }
 ];
 
 const ServiceAreas = () => {
