@@ -27,6 +27,7 @@ const OnboardingForm = () => {
         postal_code: '',
         preferred_contact_method: 'phone',
         marketing_opt_in: false,
+        location_notes: '', // Added
       },
       equipment: {
         category: 'Lawnmower - Push',
@@ -34,6 +35,8 @@ const OnboardingForm = () => {
         model: '',
         year: undefined,
         serial_number: '',
+        engine_model_serial_number: '', // Added
+        engine_hours: undefined, // Added
       },
       problem: {
         issue_description: '',
@@ -41,9 +44,10 @@ const OnboardingForm = () => {
         urgency_level: 'medium',
       },
       service: {
-        preferred_drop_off_date: '',
+        preferred_service_date: '', // Renamed
         preferred_time_window: '',
         preferred_contact_method: 'phone',
+        on_site_requirements_confirmed: false, // Added
       },
       terms: {
         terms_accepted: false,
@@ -125,7 +129,8 @@ const OnboardingForm = () => {
         isValid = await methods.trigger(['problem.issue_description']);
         break;
       case 3:
-        isValid = await methods.trigger(['service.preferred_contact_method']);
+        // Added 'service.on_site_requirements_confirmed' as it's a required field in this step
+        isValid = await methods.trigger(['service.preferred_contact_method', 'service.on_site_requirements_confirmed']);
         break;
       case 4:
         isValid = await methods.trigger(['terms.terms_accepted', 'terms.privacy_policy_accepted']);
@@ -286,11 +291,39 @@ const OnboardingForm = () => {
           )}
         </div>
       </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Specific Directions/Landmarks (Optional)
+        </label>
+        <textarea
+          {...methods.register('customer.location_notes')}
+          rows={3}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          placeholder="e.g., House at the end of the cul-de-sac with a blue door, gate code #1234"
+        />
+        {methods.formState.errors.customer?.location_notes && (
+          <p className="mt-1 text-sm text-red-600">{methods.formState.errors.customer.location_notes.message}</p>
+        )}
+      </div>
     </div>
   );
 
   // Equipment Details Step
-  const EquipmentStep = () => (
+  const EquipmentStep = () => {
+    const watchedCategory = methods.watch('equipment.category');
+    const categoriesWithEngines = [
+      "Lawnmower - Riding",
+      "Lawnmower - Zero Turn",
+      "Chainsaw - Gas",
+      "Generator - Portable",
+      "Generator - Inverter",
+      "Generator - Standby",
+      // Add other categories that have engines and might have separate S/N or hour meters
+    ];
+    const showEngineFields = categoriesWithEngines.includes(watchedCategory);
+
+    return (
     <div className="space-y-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -365,12 +398,50 @@ const OnboardingForm = () => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Serial number (if available)"
           />
+          <p className="mt-1 text-xs text-gray-500">Why do we need this? Helps us identify exact parts & service info for your equipment.</p>
         </div>
       </div>
 
+      {showEngineFields && (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Engine Model/Serial # (if applicable)
+              </label>
+              <input
+                {...methods.register('equipment.engine_model_serial_number')}
+                type="text"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Usually on the engine block itself"
+              />
+              <p className="mt-1 text-xs text-gray-500">Why is this important? Helps us identify exact engine parts for faster repairs.</p>
+              {methods.formState.errors.equipment?.engine_model_serial_number && (
+                <p className="mt-1 text-sm text-red-600">{methods.formState.errors.equipment.engine_model_serial_number.message}</p>
+              )}
+            </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Approximate Engine Hours (if applicable)
+              </label>
+              <input
+                {...methods.register('equipment.engine_hours', { valueAsNumber: true })}
+                type="number"
+                min="0"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="e.g., 150"
+              />
+              {methods.formState.errors.equipment?.engine_hours && (
+                <p className="mt-1 text-sm text-red-600">{methods.formState.errors.equipment.engine_hours.message}</p>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
+};
 
   // Problem Description Step
   const ProblemStep = () => (
@@ -423,14 +494,18 @@ const OnboardingForm = () => {
     <div className="space-y-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Preferred Drop-off Date
+          Preferred Service Date
         </label>
         <input
-          {...methods.register('service.preferred_drop_off_date')}
+          {...methods.register('service.preferred_service_date')}
           type="date"
           min={new Date().toISOString().split('T')[0]}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
+        <p className="mt-1 text-xs text-gray-500">We come to you! Select a preferred date for our technician to visit.</p>
+        {methods.formState.errors.service?.preferred_service_date && (
+            <p className="mt-1 text-sm text-red-600">{methods.formState.errors.service.preferred_service_date.message}</p>
+        )}
       </div>
 
       <div>
@@ -445,7 +520,11 @@ const OnboardingForm = () => {
           <option value="morning">Morning (8 AM - 12 PM)</option>
           <option value="afternoon">Afternoon (12 PM - 5 PM)</option>
           <option value="evening">Evening (5 PM - 8 PM)</option>
+          <option value="flexible">I'm flexible / First Available</option>
         </select>
+        {methods.formState.errors.service?.preferred_time_window && (
+            <p className="mt-1 text-sm text-red-600">{methods.formState.errors.service.preferred_time_window.message}</p>
+        )}
       </div>
 
       <div>
@@ -461,6 +540,22 @@ const OnboardingForm = () => {
           <option value="email">Email</option>
         </select>
       </div>
+
+      <div>
+        <label className="flex items-start space-x-3 mt-4">
+          <input
+            {...methods.register('service.on_site_requirements_confirmed')}
+            type="checkbox"
+            className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+          <span className="text-sm text-gray-700">
+            I confirm there will be adequate space for the technician to work and access to the equipment at my location. *
+          </span>
+        </label>
+        {methods.formState.errors.service?.on_site_requirements_confirmed && (
+          <p className="ml-7 text-sm text-red-600">{methods.formState.errors.service.on_site_requirements_confirmed.message}</p>
+        )}
+      </div>
     </div>
   );
 
@@ -475,16 +570,52 @@ const OnboardingForm = () => {
           
           <div className="space-y-4 text-sm">
             <div>
-              <strong>Contact:</strong> {watchedData.customer?.full_name} ({watchedData.customer?.email})
+              <strong>Contact:</strong> {watchedData.customer?.full_name} ({watchedData.customer?.email}, {watchedData.customer?.phone})
             </div>
             <div>
-              <strong>Equipment:</strong> {watchedData.equipment?.category} - {watchedData.equipment?.make} {watchedData.equipment?.model}
+              <strong>Address:</strong> {watchedData.customer?.address_line1}, {watchedData.customer?.city}, {watchedData.customer?.state} {watchedData.customer?.postal_code}
             </div>
+            {watchedData.customer?.location_notes && (
+              <div>
+                <strong>Location Notes:</strong> {watchedData.customer.location_notes}
+              </div>
+            )}
+            <div>
+              <strong>Equipment:</strong> {watchedData.equipment?.category} - {watchedData.equipment?.make} {watchedData.equipment?.model}
+              {watchedData.equipment?.serial_number && ` (S/N: ${watchedData.equipment.serial_number})`}
+            </div>
+            {watchedData.equipment?.engine_model_serial_number && (
+              <div>
+                <strong>Engine S/N:</strong> {watchedData.equipment.engine_model_serial_number}
+              </div>
+            )}
+            {watchedData.equipment?.engine_hours !== undefined && watchedData.equipment?.engine_hours !== null && (
+              <div>
+                <strong>Engine Hours:</strong> {watchedData.equipment.engine_hours}
+              </div>
+            )}
             <div>
               <strong>Issue:</strong> {watchedData.problem?.issue_description}
             </div>
+            {watchedData.problem?.service_requested && (
+              <div>
+                <strong>Service Requested:</strong> {watchedData.problem.service_requested}
+              </div>
+            )}
             <div>
-              <strong>Contact Method:</strong> {watchedData.service?.preferred_contact_method}
+              <strong>Urgency:</strong> {watchedData.problem?.urgency_level}
+            </div>
+            <div>
+              <strong>Preferred Service Date:</strong> {watchedData.service?.preferred_service_date || 'Not specified'}
+            </div>
+            <div>
+              <strong>Preferred Time Window:</strong> {watchedData.service?.preferred_time_window || 'No preference'}
+            </div>
+            <div>
+              <strong>Service Contact Method:</strong> {watchedData.service?.preferred_contact_method}
+            </div>
+            <div>
+              <strong>On-site Requirements Confirmed:</strong> {watchedData.service?.on_site_requirements_confirmed ? 'Yes' : 'No'}
             </div>
           </div>
         </div>

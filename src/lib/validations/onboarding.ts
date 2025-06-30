@@ -35,6 +35,7 @@ export const contactInfoSchema = z.object({
   postal_code: z.string().min(5, "Postal code is required"),
   preferred_contact_method: z.enum(["phone", "email", "text"]).optional(),
   marketing_opt_in: z.boolean().optional().default(false),
+  location_notes: z.string().optional(), // Added for specific directions
 })
 
 // Equipment details schema - matches form field names
@@ -44,6 +45,8 @@ export const equipmentDetailsSchema = z.object({
   model: z.string().optional(),
   year: z.number().int().min(1900).max(new Date().getFullYear() + 1).optional(),
   serial_number: z.string().optional(),
+  engine_model_serial_number: z.string().optional(), // Added for engine S/N
+  engine_hours: z.number().int().min(0).optional(), // Added for engine hours
 })
 
 // Problem description schema - matches form field names
@@ -55,9 +58,12 @@ export const problemDescriptionSchema = z.object({
 
 // Service preferences schema - matches form field names
 export const servicePreferencesSchema = z.object({
-  preferred_drop_off_date: z.string().optional(),
-  preferred_time_window: z.enum(["morning", "afternoon", "evening", ""]).optional(),
+  preferred_service_date: z.string().optional(), // Renamed from preferred_drop_off_date
+  preferred_time_window: z.enum(["morning", "afternoon", "evening", "flexible", ""]).optional(), // Added "flexible"
   preferred_contact_method: z.enum(["phone", "email", "text"]),
+  on_site_requirements_confirmed: z.boolean().refine(val => val === true, { // Added and made required
+    message: "Please confirm you meet the on-site requirements."
+  }),
 })
 
 // Review and terms schema - matches form field names
@@ -107,6 +113,7 @@ export const onboardingApiSchema = z.object({
     postal_code: z.string(),
     preferred_contact_method: z.string().optional(),
     marketing_opt_in: z.boolean().optional().default(false),
+    location_notes: z.string().optional(), // Added
   }),
   equipment: z.object({
     category: equipmentCategorySchema,
@@ -114,6 +121,8 @@ export const onboardingApiSchema = z.object({
     model: z.string().optional(),
     year: z.number().optional(),
     serial_number: z.string().optional(),
+    engine_model_serial_number: z.string().optional(), // Added
+    engine_hours: z.number().int().min(0).optional(), // Added
   }),
   problem: z.object({
     issue_description: z.string(),
@@ -121,9 +130,10 @@ export const onboardingApiSchema = z.object({
     urgency_level: z.string().optional(),
   }),
   service: z.object({
-    preferred_drop_off_date: z.string().optional(),
-    preferred_time_window: z.string().optional(),
+    preferred_service_date: z.string().optional(), // Renamed
+    preferred_time_window: z.string().optional(), // Will accept "flexible"
     preferred_contact_method: z.string(),
+    on_site_requirements_confirmed: z.boolean().optional(), // Added
   }),
   terms: z.object({
     terms_accepted: z.boolean(),
